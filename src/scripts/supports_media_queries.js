@@ -1,0 +1,1 @@
+var supportsMediaQueries = !!(win.matchMedia || win.styleMedia);

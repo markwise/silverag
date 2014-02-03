@@ -1,0 +1,10 @@
+{
+    "name": "silverag",
+    "version": "0.3.0",
+    "private": true,
+    "devDependencies": {
+        "jquery": "1.11.0",
+        "jasmine-jquery": "1.7.0",
+        "sinon": "1.8.1"
+    }
+}
