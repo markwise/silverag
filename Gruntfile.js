@@ -135,10 +135,6 @@ module.exports = function (grunt) {
             }
         },
         
-        cssbeautifier: {
-            files: ['build/**/*.css']
-        },
-        
         jshint: {
             options: grunt.file.readJSON('.jshintrc'),
             scripts: ['src/scripts/**/*.js'],
@@ -228,7 +224,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-cssbeautifier');
     grunt.loadNpmTasks('grunt-indent');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-zip');
@@ -270,10 +265,7 @@ module.exports = function (grunt) {
         'clean:styles',
         
         //Compile sass files and move to build directory
-        'sass',
-        
-        //Format output
-        'cssbeautifier'
+        'sass'
     ]);
     
     grunt.registerTask('build', [
