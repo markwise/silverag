@@ -1,13 +1,20 @@
+/* global
+doc,
+layouts,
+mediaMatch
+*/
 
+//requires: supports_media_queries
 //requires: class_list
 //requires: layout
 //requires: layouts
 //requires: media_match
 
 var mediaQuery = (function () {
+    'use strict';
 
     var getResponsiveLayouts = function (maxWidth) {
-        return doc.querySelectorAll('[class~="respond:' + maxWidth + '"]');
+        return doc.querySelectorAll('[class~="ag-respond:' + maxWidth + '"]');
     };
     
     
@@ -41,5 +48,5 @@ var mediaQuery = (function () {
     
     return {
         createMaxWidth: createMaxWidth
-    }
+    };
 }());

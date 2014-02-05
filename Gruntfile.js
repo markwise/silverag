@@ -29,7 +29,13 @@ module.exports = function (grunt) {
                     }
                 },
                 src: [
-                    //'src/scripts/'
+                    'src/scripts/supports_media_queries.js',
+                    'src/scripts/class_list.js',
+                    'src/scripts/layout.js',
+                    'src/scripts/layouts.js',
+                    'src/scripts/media_match.js',
+                    'src/scripts/media_query.js',
+                    'src/scripts/initialize_responsive_layouts.js'
                 ],
                 dest: '.tmp/concat.js'
             },

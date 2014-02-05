@@ -1,3 +1,8 @@
+/* global
+win,
+supportsMediaQueries,
+mediaQuery
+*/
 
 //requires: supports_media_queries
 //requires: class_list
@@ -23,7 +28,7 @@ var initializeResponsiveLayouts = (function () {
         
         for (; i <= 960; i += 20) {
             mediaQueries.push(mediaQuery.createMaxWidth(i));
-        };
+        }
     }());
     
     

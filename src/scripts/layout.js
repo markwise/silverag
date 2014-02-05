@@ -1,17 +1,19 @@
+/* global classList */
 
 //requires: class_list
 
 var layout = (function () {
+    'use strict';
     
     var createSignatureList = function (ele) {
         var match,
             klass = ele.className,
-            list = ele.cel.signatureList = [],
+            list = ele.ag.signatureList = [],
             keys = [
-                'flip',
-                'align:[tmb]',
-                'space:\\d',
-                'split(?::\\d(?:\\/\\d)?)?'
+                'ag-flip',
+                'ag-align:[tmb]',
+                'ag-space:\\d',
+                'ag-split(?::\\d(?:\\/\\d)?)?'
             ],
             i = keys.length - 1;
         
@@ -22,17 +24,17 @@ var layout = (function () {
             }
         } while (i--);
         
-        //The class ns-1 is an internal code that means a responsive layout is 
+        //The class ag-1 is an internal code that means a responsive layout is 
         //ready. The presence of this class removes styles that are used during 
-        //page load through negation, i.e., :not(.ns-1).
-        classList.add('ns-1', ele);
+        //page load through negation, i.e., :not(.ag-1).
+        classList.add('ag-1', ele);
         
         return list;
     };
     
     
     var getSignatureList = function (ele) {
-        var store = ele.cel || (ele.cel = {});
+        var store = ele.ag || (ele.ag = {});
         return store.signatureList || createSignatureList(ele);
     };
     

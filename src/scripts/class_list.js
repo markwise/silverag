@@ -1,5 +1,6 @@
 var classList = (function () {
-
+    'use strict';
+    
     var trim = (function () {
         if (String.prototype.trim) {
             return function (str) {
@@ -11,14 +12,14 @@ var classList = (function () {
             };
         }
     }());
-
-
+    
+    
     var getClassList = function (ele) {
-        var s = trim(ele.className); 
+        var s = trim(ele.className);
         return s.length ? s.split(/\s+/) : [];
     };
-
-
+    
+    
     var contains = (function () {
         if (typeof DOMTokenList !== 'undefined') {
             return function (klass, ele) {
@@ -28,19 +29,19 @@ var classList = (function () {
             return function (klass, ele) {
                 var a = getClassList(ele),
                     i = a.length;
-
+                
                 while (i--) {
                     if (klass === a[i]) {
                         return true;
                     }
                 }
-
+                
                 return false;
             };
         }
     }());
     
-        
+    
     var add = (function () {
         if (typeof DOMTokenList !== 'undefined') {
             return function (klass, ele) {
@@ -49,7 +50,7 @@ var classList = (function () {
         } else {
             return function (klass, ele) {
                 var a;
-            
+                
                 if (contains(klass, ele)) {
                     return;
                 }
@@ -61,7 +62,7 @@ var classList = (function () {
         }
     }());
     
-
+    
     var remove = (function () {
         if (typeof DOMTokenList !== 'undefined') {
             return function (klass, ele) {
@@ -71,14 +72,14 @@ var classList = (function () {
             return function (klass, ele) {
                 var a = getClassList(ele),
                     i = a.length;
-
+                
                 while (i--) {
                     if (klass === a[i]) {
                         a.splice(i, 1);
                         break;
                     }
                 }
-
+                
                 ele.className = a.join(' ');
             };
         }
@@ -86,9 +87,8 @@ var classList = (function () {
     
     
     return {
-        contains : contains,
-        add : add,
-        remove : remove
+        contains: contains,
+        add: add,
+        remove: remove
     };
 }());
-        

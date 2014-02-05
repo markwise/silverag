@@ -1,7 +1,13 @@
+/* global
+win, 
+supportsMediaQueries
+*/
 
 //requires: supports_media_queries
 
 var mediaMatch = win.matchMedia || (function () {
+    'use strict';
+    
     //matchMedia polyfill for IE9, SA5, iOS4.2
     
     if (!supportsMediaQueries) {
