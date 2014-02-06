@@ -1,17 +1,5 @@
 [class*='ag-split']{
     /*
-     * Removes white space between inline-block elements
-     *
-     * Not all browsers support font-size:0. In this case, negative letter 
-     * spacing is used as a fallback.
-     *
-     * For browsers that support font-size:0, letter-spacing is ignored when
-     * the font-size value is 0
-     */
-    font-size:0;
-    /* IE won't justify text with a font-size of 0 */
-	font-size:1px\9;
-    /*
      * Justified alignment doesn't affect the last line of text. If there is 
      * only one line, it is the first and last line and won't be justified.
      *
@@ -47,13 +35,6 @@
     letter-spacing:-.334em;
     /* IE requires a smaller threshold */
     letter-spacing:-.34em\9;
-}
-
-/* IE8 */
-@media \0screen{
-    [class*='ag-split']{
-        font-size:medium;
-    }
 }
 
 [class*='ag-split'][class~='ag-space:1'],
@@ -117,14 +98,6 @@
     letter-spacing:normal;
 }
 .ag-cel{
-    /* 
-     * Reset temporary font-size and line-height values to sensible defaults
-     *
-     * The font-size and line-height for ag-cel will be generated based on the
-     * the body elements font-size and line-height
-     */
-    font-size:16px;
-    font-size:1rem;
     line-height:1.5;
 }
 
@@ -288,6 +261,16 @@
 
 
 /* Responsive */
+
+/* 
+ * IE8 doesn't support media queries, so make sure cels that should be hidden
+ * with ag-show are hidden 
+ */
+@media \0screen{
+    [class*='ag-split']>.ag-show{
+        display:none;
+    }
+}
 
 @media screen and (min-width:481px){[class~='ag-respond:480']>.ag-show{display:none}}
 @media screen and (min-width:501px){[class~='ag-respond:500']>.ag-show{display:none}}
