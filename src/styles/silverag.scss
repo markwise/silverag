@@ -253,10 +253,18 @@
     transition:opacity .5s;
 }
 
-/* The class ag-2 is added via JavaScript once the height of the line has been set */
-.ag-line.ag-2{
+/* The class ag-ready is added via JavaScript once a layout has been initialized */
+.ag-ready>.ag-line{
     visibility:visible;
     opacity:1;
+}
+
+/* 
+ * The class ag-reflow is added via JavaScript temporarily while a layout is 
+ * being resized
+ */
+.ag-reflow>.ag-line{
+    min-height:0 !important;
 }
 
 

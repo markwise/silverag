@@ -1,4 +1,8 @@
-/* global layout */
+/* global
+win,
+layout,
+getLayouts
+*/
 
 //requires: class_list
 //requires: layout
@@ -6,24 +10,48 @@
 var layouts = (function () {
     'use strict';
 
-    var removeSignature = function (eles) {
+    var delegate = function (fn, eles) {
+        eles || (eles = getLayouts());
         var i = eles.length;
         while (i--) {
-            layout.removeSignature(eles[i]);
+            fn(eles[i]);
         }
+    };
+
+
+    var removeSignature = function (eles) {
+        delegate(layout.removeSignature, eles);
     };
     
     
     var applySignature = function (eles) {
-        var i = eles.length;
-        while (i--) {
-            layout.applySignature(eles[i]);
-        }
+        delegate(layout.applySignature, eles);
     };
+    
+    
+    var initialize = function () {
+        delegate(layout.initialize);
+    };
+    
+    
+    var resize = function () {
+        delegate(layout.resizeLines);
+    };
+    
+    
+    //if (!supportsFlexbox) {
+    if (win.addEventListener) {
+        win.addEventListener('resize', resize);
+    } else {
+        win.attachEvent('onresize', resize);
+    }
+    //}
     
     
     return {
         removeSignature: removeSignature,
-        applySignature: applySignature
+        applySignature: applySignature,
+        initialize: initialize,
+        resize: resize
     };
 }());
