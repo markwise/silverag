@@ -1,4 +1,5 @@
 module.exports = function (grunt) {
+    var _ = require('lodash');
     
     grunt.initConfig({
     
@@ -30,12 +31,14 @@ module.exports = function (grunt) {
                 },
                 src: [
                     'src/scripts/supports_media_queries.js',
+                    'src/scripts/get_layouts.js',
                     'src/scripts/class_list.js',
                     'src/scripts/layout.js',
                     'src/scripts/layouts.js',
                     'src/scripts/media_match.js',
                     'src/scripts/media_query.js',
-                    'src/scripts/initialize_responsive_layouts.js'
+                    'src/scripts/initialize_responsive_layouts.js',
+                    'src/scripts/dom_ready.js'
                 ],
                 dest: '.tmp/concat.js'
             },
@@ -162,7 +165,8 @@ module.exports = function (grunt) {
                         afterEach: false,
                         spyOn: false,
                         runs: false,
-                        waitsFor: false
+                        waitsFor: false,
+                        setFixtures: false
                     }
                 },
                 src: ['test/specs/**/*.js']
@@ -176,7 +180,15 @@ module.exports = function (grunt) {
                     'test/vendor/jquery/jquery.js',
                     'test/vendor/jasmine-jquery/lib/jasmine-jquery.js',
                     'test/vendor/sinon/lib/sinon.js',
-                    'src/scripts/**/*.js',
+                    'test/globals.js',
+                    'src/scripts/supports_media_queries.js',
+                    'src/scripts/get_layouts.js',
+                    'src/scripts/class_list.js',
+                    'src/scripts/layout.js',
+                    'src/scripts/layouts.js',
+                    'src/scripts/media_match.js',
+                    'src/scripts/media_query.js',
+                    'src/scripts/initialize_responsive_layouts.js',
                     'test/specs/**/*.js'
                 ],
                 exclude: [
