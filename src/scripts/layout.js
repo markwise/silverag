@@ -24,11 +24,6 @@ var layout = (function () {
             }
         } while (i--);
         
-        //The class ag-1 is an internal code that means a responsive layout is 
-        //ready. The presence of this class removes styles that are used during 
-        //page load through negation, i.e., :not(.ag-1).
-        classList.add('ag-1', ele);
-        
         return list;
     };
     

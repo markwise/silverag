@@ -4,38 +4,21 @@ $i: 480;
     $ag-respond: "[class~='ag-respond:#{$i}']";
 
     @media screen and (min-width: #{$i + 1}px) {
-        #{$ag-respond} > .ag-show {
+        [class*='ag-split']#{$ag-respond} > .ag-cel,
+        [class*='ag-split']#{$ag-respond} > .ag-line {
+            display: inline-block;
+        }
+        
+        [class*='ag-split']#{$ag-respond} > .ag-show {
             display: none;
         }
     }
     
     @media screen and (max-width: #{$i}px) {
-        /*
-         * Defining layout widths in media queries would repeat huge blocks of 
-         * code that would bloat the file size significantly
-         *
-         * To remedy this, Silver Ag uses a mix of CSS media queries and 
-         * matchMedia to add and remove styles from responsive layouts
-         *
-         * Using matchMedia, classes are added and removed from layouts 
-         * achieving the same effect as repeating styles in CSS media queries 
-         * without bloating the file size
-         *
-         * The following style rule provides a stopgap to override a layouts
-         * display and width until the class ag-1 can be applied negating the 
-         * style rule and layout classes can be removed from a layout
-         */
-        #{$ag-respond}:not(.ag-1) > .ag-cel {
-            display: block;
+        [class*='ag-split']#{$ag-respond} > .ag-cel {
             width: auto !important;
-        }
-        #{$ag-respond} > .ag-hide,
-        #{$ag-respond} > .ag-line {
-            display: none;
         }
     }
     
     $i: $i + 20;
 }
-
-

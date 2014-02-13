@@ -2,6 +2,11 @@
 
 $ag-split: "[class*='ag-split']";
 
+/*
+ * ag-core
+ * -------
+ */
+
 #{$ag-split} {
     /*
      * Justified alignment doesn't affect the last line of text. If there is 
@@ -87,8 +92,13 @@ $ag-split: "[class*='ag-split']";
     }
 }
 
+
+/* 
+ * ag-cel
+ * ------
+ */
+
 #{$ag-split} > .ag-cel {
-    display: inline-block;
     @include boxSizing('border-box');
     /* IE bug fix to prevent wrapping when resizing */
     min-height: 100%;
@@ -99,38 +109,74 @@ $ag-split: "[class*='ag-split']";
     -ms-text-align-last: auto;
     letter-spacing: normal;
 }
+
+/* Reset line-height with a low specificity making it easy to override */
 .ag-cel {
     line-height: 1.5;
 }
 
+.ag-hide {
+    display: none;
+}
 
-/* Alignment */
+#{$ag-split}:not([class*='ag-respond']) > .ag-cel {
+    display: inline-block;
+}
+
+#{$ag-split}:not([class*='ag-respond']) > .ag-show {
+    display: none;
+}
+
+/* IE8 */
+@media \0screen {
+    #{$ag-split} > .ag-cel {
+        display: inline-block;
+    }
+    #{$ag-split} > .ag-show {
+        display: none;
+    }
+}
+
+
+/* 
+ * ag-align 
+ * -------- 
+ */
 
 #{$ag-split}[class~='ag-align:t'] > .ag-cel {
     vertical-align: top;
 }
+
 #{$ag-split}[class~='ag-align:m'] > .ag-cel {
     vertical-align: middle;
 }
+
 #{$ag-split}[class~='ag-align:b'] > .ag-cel {
     vertical-align: bottom;
 }
 
 
-/* Direction */
+/*
+ * ag-flip 
+ * -------
+ */
 
 #{$ag-split}.ag-flip {
     direction: rtl;
 }
+
 #{$ag-split}.ag-flip > .ag-cel {
     direction: ltr;
 }
 
 
-/* Vertical line rule */
+/* 
+ * ag-line
+ * -------
+ */
 
 .ag-line {
-    display: inline-block;
+    display: none;
     overflow: hidden;
     border-top-width: 0 !important;
     border-right-width: 0 !important;
@@ -141,6 +187,17 @@ $ag-split: "[class*='ag-split']";
     visibility: hidden;
     opacity: 0;
     @include transition('opacity .5s');
+}
+
+#{$ag-split}:not([class*='ag-respond']) > .ag-line {
+    display: inline-block;
+}
+
+/* IE8 */
+@media \0screen {
+    #{$ag-split} > .ag-line {
+        display: inline-block;
+    }
 }
 
 /* The class ag-ready is added via JavaScript once a layout has been initialized */
@@ -158,23 +215,7 @@ $ag-split: "[class*='ag-split']";
 }
 
 
-/* Layouts */
-
 @import 'partials/layouts';
-
-
-/* Responsive */
-
-/* 
- * IE8 doesn't support media queries, so make sure cels that should be hidden
- * with ag-show are hidden 
- */
-@media \0screen {
-    #{$ag-split} > .ag-show {
-        display: none;
-    }
-}
-
 @import 'partials/respond';
 
 
