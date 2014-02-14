@@ -129,7 +129,8 @@ var layout = (function () {
                 h.lines.push(ele);
             
             //ele is an ag-cel
-            } else {
+            } else
+            if (!classList.contains('ag-show', ele)) {
                 h.height = Math.max(h.height, ele.offsetHeight);
                 j += 1;
             }
