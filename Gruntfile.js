@@ -37,8 +37,8 @@ module.exports = function (grunt) {
                     'src/scripts/layouts.js',
                     'src/scripts/media_match.js',
                     'src/scripts/media_query.js',
-                    'src/scripts/initialize_responsive_layouts.js',
-                    'src/scripts/dom_ready.js'
+                    'src/scripts/dom_ready.js',
+                    'src/scripts/initialize.js'
                 ],
                 dest: '.tmp/concat.js'
             },
@@ -188,13 +188,14 @@ module.exports = function (grunt) {
                     'src/scripts/layouts.js',
                     'src/scripts/media_match.js',
                     'src/scripts/media_query.js',
-                    'src/scripts/initialize_responsive_layouts.js',
+                    'src/scripts/dom_ready.js',
+                    'src/scripts/initialize.js',
                     'test/specs/**/*.js'
                 ],
-                exclude: [
-                    'src/scripts/header.js',
-                    'src/scripts/footer.js'
-                ],
+                //exclude: [
+                    //'src/scripts/header.js',
+                    //'src/scripts/footer.js'
+                //],
                 singleRun: true
             },
             unit: {

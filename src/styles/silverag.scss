@@ -8,6 +8,7 @@ $ag-split: "[class*='ag-split']";
  */
 
 #{$ag-split} {
+    visibility: hidden;
     /*
      * Justified alignment doesn't affect the last line of text. If there is 
      * only one line, it is the first and last line and won't be justified.
@@ -44,6 +45,10 @@ $ag-split: "[class*='ag-split']";
     letter-spacing: -.334em;
     /* IE requires a smaller threshold */
     letter-spacing: -.34em\9;
+}
+
+#{$ag-split}.ag-ready {
+    visibility: visible;
 }
 
 #{$ag-split}[class~='ag-space:1'],

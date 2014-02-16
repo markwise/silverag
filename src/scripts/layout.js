@@ -1,56 +1,58 @@
-/* global classList */
+/* global
+supportsMediaQueries,
+classList,
+mediaMatch
+*/
 
+//requires: supports_media_queries
 //requires: class_list
+//requires: media_match
 
 var layout = (function () {
     'use strict';
-    
-    var createSignatureList = function (ele) {
+        
+    var storeModifiers = function (ele) {
         var match,
             klass = ele.className,
-            list = ele.ag.signatureList = [],
-            keys = [
+            modifiers = ele.ag.modifiers = [],
+            a = [
                 'ag-flip',
                 'ag-align:[tmb]',
                 'ag-space:\\d',
                 'ag-split(?::\\d(?:\\/\\d)?)?'
             ],
-            i = keys.length - 1;
+            i = a.length - 1;
         
         do {
-            match = klass.match(new RegExp('(?:^|\\s+)(' + keys[i] + ')(?:\\s+|$)'));
+            match = klass.match(new RegExp('(?:^|\\s+)(' + a[i] + ')(?:\\s+|$)'));
             if (match) {
-                list.push(match[1]);
+                modifiers.push(match[1]);
             }
         } while (i--);
-        
-        return list;
     };
     
     
-    var getSignatureList = function (ele) {
-        var store = ele.ag || (ele.ag = {});
-        return store.signatureList || createSignatureList(ele);
-    };
-    
-    
-    var removeSignature = function (ele) {
-        var a = getSignatureList(ele),
+    var removeModifiers = function (ele) {
+        var a = ele.ag.modifiers,
             i = a.length;
         
         while (i--) {
             classList.remove(a[i], ele);
         }
+        
+        ele.ag.responding = true;
     };
     
     
-    var applySignature = function (ele) {
-        var a = getSignatureList(ele),
+    var applyModifiers = function (ele) {
+        var a = ele.ag.modifiers,
             i = a.length;
         
         while (i--) {
             classList.add(a[i], ele);
         }
+        
+        ele.ag.responding = false;
     };
     
     
@@ -141,33 +143,23 @@ var layout = (function () {
     
     
     var hasLines = function (ele) {
-        var store = ele.ag,
-            hasLines = store.hasLines,
-            eles,
-            i;
-        
-        if (hasLines !== void 0) {
-            return hasLines;
-        }
-    
-        eles = getElements(ele);
-        i = eles.length;
+        var eles = getElements(ele),
+            i = eles.length;
         
         while (i--) {
             if (classList.contains('ag-line', eles[i])) {
-                hasLines = true;
-                break;
+                return true;
             }
         }
     
-        return (store.hasLines = hasLines || false);
+        return false;
     };
     
     
     var resizeLines = function (ele) {
+        var store = ele.ag;
         
-        //add condition if a layout is responding to ignore resize
-        if (!hasLines(ele)) {
+        if (!(store.lines && !store.responding)) {
             return;
         }
         
@@ -185,19 +177,49 @@ var layout = (function () {
     };
     
     
+    var initializeResponsiveLayout = function (ele) {
+        if (!supportsMediaQueries) {
+            return;
+        }
+    
+        var match = ele.className.match(/ag-respond:(\d+)/),
+            media;
+        
+        if (match) {
+            media = 'screen and (max-width:' + match[1] + 'px)';
+           
+            if (mediaMatch(media).matches) {
+                removeModifiers(ele);
+            }
+        }
+    };
+    
+    
     var initialize = function (ele) {
         
         //Create store to cache internal layout data
-        ele.ag || (ele.ag = {});
+        var store = ele.ag || (ele.ag = {});
         
+        if (store.ready) {
+            return;
+        }
+        
+        store.ready = false;
+        store.responding = false;
+        store.lines = hasLines(ele);
+        storeModifiers(ele);
+        
+        initializeResponsiveLayout(ele);
         resizeLines(ele);
+        
         classList.add('ag-ready', ele);
+        store.ready = true;
     };
     
     
     return {
-        removeSignature: removeSignature,
-        applySignature: applySignature,
+        removeModifiers: removeModifiers,
+        applyModifiers: applyModifiers,
         initialize: initialize,
         resizeLines: resizeLines
     };

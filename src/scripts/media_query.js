@@ -12,41 +12,28 @@ mediaMatch
 
 var mediaQuery = (function () {
     'use strict';
-
-    var getResponsiveLayouts = function (maxWidth) {
-        return doc.querySelectorAll('[class~="ag-respond:' + maxWidth + '"]');
-    };
-    
-    
-    var maxWidthChange = function (mediaQueryList) {
-        var maxWidth = mediaQueryList.media.match(/(\d+)/)[1],
-            eles = getResponsiveLayouts(maxWidth);
         
+    var maxWidthChange = function (mql) {
+        var maxWidth = mql.media.match(/(\d+)/)[1],
+            eles = doc.querySelectorAll('[class~="ag-respond:' + maxWidth + '"]');
+    
         if (eles.length) {
-            if (mediaQueryList.matches) {
-                layouts.removeSignature(eles);
+            if (mql.matches) {
+                layouts.removeModifiers(eles);
             } else {
-                layouts.applySignature(eles);
+                layouts.applyModifiers(eles);
             }
         }
     };
     
     
-    var createMaxWidth = function (maxWidth) {
-        var media = 'screen and (max-width:' + maxWidth + 'px)',
-            mediaQueryList = mediaMatch(media);
-        
-        mediaQueryList.addListener(maxWidthChange);
-        
-        return {
-            maxWidthChange: function () {
-                maxWidthChange(mediaQueryList);
-            }
-        };
+    var maxWidth = function (width) {
+        var media = 'screen and (max-width:' + width + 'px)';
+        mediaMatch(media).addListener(maxWidthChange);
     };
     
     
     return {
-        createMaxWidth: createMaxWidth
+        maxWidth: maxWidth
     };
 }());
