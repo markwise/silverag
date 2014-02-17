@@ -115,7 +115,8 @@ module.exports = function (grunt) {
         sass: {
             build: {
                 options: {
-                    banner: '@charset "utf-8";\n\n<%= banners.build %>\n',
+                    //banner: '@charset "utf-8";\n\n<%= banners.build %>\n',
+                    banner: '<%= banners.build %>\n',
                     style: 'expanded'
                 },
                 files: [
