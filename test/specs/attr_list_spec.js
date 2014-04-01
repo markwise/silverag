@@ -1,3 +1,5 @@
+/* global attr */
+
 describe('attr', function () {
 
     var $ele;
@@ -166,13 +168,14 @@ describe('attr', function () {
         });
         
         it('should add multiple attribute values', function () {
+            var attrList;
             attr('ag', ele).add('split:3/1 space:2');
-            var attrList = attr('ag', ele).get(true);
+            attrList = attr('ag', ele).get(true);
             expect(attrList).toContain('split:3/1');
             expect(attrList).toContain('space:2');
            
             attr('ag', ele).add('align:t flip');
-            var attrList = attr('ag', ele).get(true);
+            attrList = attr('ag', ele).get(true);
             expect(attrList).toContain('align:t');
             expect(attrList).toContain('flip');
         });

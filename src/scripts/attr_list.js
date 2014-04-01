@@ -42,7 +42,7 @@ var attr = (function () {
         
         
     var has = function (val) {
-        var i, 
+        var i,
             str;
     
         if (ele.hasAttribute(attr)) {
@@ -67,7 +67,7 @@ var attr = (function () {
         
     var add = function (val) {
         var vals = get(true),
-            i, 
+            i,
             item;
             
         if (val !== void 0) {

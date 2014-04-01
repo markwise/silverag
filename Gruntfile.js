@@ -191,6 +191,7 @@ module.exports = function (grunt) {
                     'src/scripts/media_query.js',
                     'src/scripts/dom_ready.js',
                     'src/scripts/initialize.js',
+                    'src/scripts/attr_list.js',
                     'test/specs/**/*.js'
                 ],
                 //exclude: [
