@@ -1,9 +1,9 @@
-var attrList = (function () {
+var attr = (function () {
     'use strict';
-        
+    
     var attr;
     var ele;
-        
+    
     var trim = (function () {
         if (''.trim) {
             return function (str) {
@@ -17,127 +17,138 @@ var attrList = (function () {
     }());
     
     
-    var attribute = {
+    var reset = function () {
+        attr = null;
+        ele  = null;
+    };
     
-        get:  function (asArray) {
-            var val = trim(ele.getAttribute(attr) || '');
-            
-            if (asArray !== void 0) {
-                val = val.length ? val.split(/\s+/) : [];
+    
+    var toArray = function (str, del) {
+        str = trim(str);
+        del || (del = /\s+/);
+        return str.length ? str.split(del) : [];
+    };
+    
+        
+    var get = function (asArray) {
+        var val = ele.getAttribute(attr) || '';
+        return asArray ? toArray(val) : trim(val);
+    };
+        
+        
+    var set = function (val) {
+        ele.setAttribute(attr, val || '');
+    };
+        
+        
+    var has = function (val) {
+        var i, 
+            str;
+    
+        if (ele.hasAttribute(attr)) {
+            if (val !== void 0) {
+                val = toArray(val);
+                i = val.length;
+                str = get();
+                
+                while (i--) {
+                    if (str.indexOf(val[i]) < 0) {
+                        return false;
+                    }
+                }
             }
             
-            return val;
-        },
+            return true;
+        }
         
+        return false;
+    };
+        
+        
+    var add = function (val) {
+        var vals = get(true),
+            i, 
+            item;
+            
+        if (val !== void 0) {
+            val = toArray(val);
+            i = val.length;
+            item;
+        
+            while (i--) {
+                item = val[i];
+                
+                if (!has(item)) {
+                    vals.push(item);
+                }
+            }
+        }
+        
+        set(vals.join(' '));
+    };
+        
+    
+    var remove = function (val) {
+        var vals = get(true),
+            i,
+            j;
+        
+        if (val !== void 0) {
+            val = toArray(val);
+            i = val.length;
+           
+            while (i--) {
+                j = vals.length;
+                
+                while (j--) {
+                    if (vals[j] === val[i]) {
+                        vals.splice(j, 1);
+                    }
+                }
+            }
+            
+            set(vals.join(' '));
+        } else {
+            ele.removeAttribute(attr);
+        }
+    };
+    
+    
+    var attrList = {
+        
+        get: function (asArray) {
+            var r = get(asArray);
+            reset();
+            return r;
+        },
         
         set: function (val) {
-            ele.setAttribute(attr, val || '');
+            set(val);
+            reset();
         },
-        
         
         has: function (val) {
-            var a,
-                b,
-                i;
-        
-            if (ele.hasAttribute(attr)) {
-        
-                if (val !== void 0) {
-                    a = [].indexOf ? this.get(true) : this.get();
-                    b = val.split(/\s+/);
-                    i = b.length;
-                
-                    while (i--) {
-                        if (a.indexOf(b[i]) < 0) {
-                            return false;
-                        }
-                    }
-                }
-                
-                return true;
-            }
-    
-            return false;
+            var r = has(val);
+            reset();
+            return r;
         },
-        
         
         add: function (val) {
-            
-            if (!this.has()) {
-                return;
-            }
-            
-            var valueList = this.get(true),
-                a,
-                i,
-                item;
-                
-            if (val !== void 0) {
-                a = trim(val);
-                
-                if (a === '') {
-                    return;
-                }
-                
-                a = a.split(/\s+/);
-                i = a.length;
-                item;
-                
-                while (i--) {
-                    item = a[i];
-                    if (!this.has(item)) {
-                        valueList.push(item);
-                    }
-                }
-            }
-            
-            this.set(valueList.join(' '));
+            add(val);
+            reset();
         },
         
-    
         remove: function (val) {
-        
-            if (!this.has()) {
-                return;
-            }
-        
-            var valueList = this.get(true),
-                a,
-                i,
-                j;
-            
-            if (val !== void 0) {
-                a = trim(val);
-                
-                if (a === '') {
-                    return;
-                }
-                
-                a = a.split(/\s+/);
-                i = a.length;
-               
-                while (i--) {
-                    j = valueList.length;
-                    
-                    while (j--) {
-                        if (valueList[j] === a[i]) {
-                            valueList.splice(j, 1);
-                        }
-                    }
-                }
-                
-                this.set(valueList.join(' '));
-            } else {
-                ele.removeAttribute(attr);
-            }
+            remove(val);
+            reset();
         }
     };
     
 
     return function (at, el) {
         attr = at;
-        ele = el;
-        return attribute;
+        ele  = el;
+        return attrList;
     };
 }());
         
