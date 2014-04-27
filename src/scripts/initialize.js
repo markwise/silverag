@@ -4,7 +4,7 @@ supportsMediaQueries,
 mediaQuery,
 layouts,
 getLayouts,
-domReady
+contentLoaded
 */
 
 //requires: supports_media_queries
@@ -43,7 +43,7 @@ var initialize = (function () {
     });
     
     
-    domReady(function () {
+    contentLoaded(win, function () {
         setTimeout(function () {
             clearInterval(timer);
             //One final attempt
@@ -54,9 +54,7 @@ var initialize = (function () {
             timer =
             wait =
             initializeLayouts =
-            initializeMediaQueries =
-            /* jshint -W020 */
-            domReady = null;
+            initializeMediaQueries = null;
         });
     });
 }());
