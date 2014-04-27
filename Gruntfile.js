@@ -184,7 +184,6 @@ module.exports = function (grunt) {
                     'test/globals.js',
                     //'src/scripts/supports_media_queries.js',
                     //'src/scripts/get_layouts.js',
-                    //'src/scripts/class_list.js',
                     'src/scripts/attr_list.js',
                     //'src/scripts/layout.js',
                     //'src/scripts/layouts.js',
