@@ -4,7 +4,7 @@ layout,
 getLayouts
 */
 
-//requires: class_list
+//requires: attr_list
 //requires: layout
 
 var layouts = (function () {

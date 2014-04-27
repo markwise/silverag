@@ -8,7 +8,7 @@ domReady
 */
 
 //requires: supports_media_queries
-//requires: class_list
+//requires: attr_list
 //requires: layout
 //requires: layouts
 //requires: media_match

@@ -5,7 +5,7 @@ mediaMatch
 */
 
 //requires: supports_media_queries
-//requires: class_list
+//requires: attr_list
 //requires: layout
 //requires: layouts
 //requires: media_match
@@ -15,7 +15,7 @@ var mediaQuery = (function () {
         
     var maxWidthChange = function (mql) {
         var maxWidth = mql.media.match(/(\d+)/)[1],
-            eles = doc.querySelectorAll('[class~="ag-respond:' + maxWidth + '"]');
+            eles = doc.querySelectorAll('[ag-res="' + maxWidth + '"]');
     
         if (eles.length) {
             if (mql.matches) {

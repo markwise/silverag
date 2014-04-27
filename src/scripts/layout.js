@@ -1,179 +1,83 @@
 /* global
 supportsMediaQueries,
-classList,
+attr,
 mediaMatch
 */
 
 //requires: supports_media_queries
-//requires: class_list
+//requires: attr_list
 //requires: media_match
 
 var layout = (function () {
     'use strict';
-        
-    var storeModifiers = function (ele) {
-        var match,
-            klass = ele.className,
-            modifiers = ele.ag.modifiers = [],
-            a = [
-                'ag-flip',
-                'ag-align:[tmb]',
-                'ag-space:\\d',
-                'ag-split(?::\\d(?:\\/\\d)?)?'
-            ],
-            i = a.length - 1;
-        
-        do {
-            match = klass.match(new RegExp('(?:^|\\s+)(' + a[i] + ')(?:\\s+|$)'));
-            if (match) {
-                modifiers.push(match[1]);
-            }
-        } while (i--);
-    };
-    
     
     var removeModifiers = function (ele) {
-        var a = ele.ag.modifiers,
-            i = a.length;
-        
-        while (i--) {
-            classList.remove(a[i], ele);
-        }
-        
-        ele.ag.responding = true;
+        attr('ag', ele).remove();
+        ele.silverag.isResponding = true;
     };
     
     
     var applyModifiers = function (ele) {
-        var a = ele.ag.modifiers,
-            i = a.length;
-        
-        while (i--) {
-            classList.add(a[i], ele);
-        }
-        
-        ele.ag.responding = false;
+        attr('ag', ele).set(ele.silverag.modifiers);
+        ele.silverag.isResponding = false;
     };
     
     
-    var setLinesMinHeight = function (data) {
-        var lines = data.lines,
-            i = lines.length;
-        
-        while (i--) {
-            lines[i].style.minHeight = data.height + 'px';
-        }
-    };
-    
-    
-    var getMaxColsPerRow = function (ele) {
-        var store = ele.ag,
-            count = store.maxColsPerRow,
-            match;
-    
-        if (count !== void 0) {
-            return count;
-        }
-        
-        match = ele.className.match(/ag-split:(\d(?:\/\d)*)/);
-        
-        if (match) {
-            match = match[1];
-            count = match.split('/').length;
-            
-            if (count === 1) {
-                count = +match;
-            }
-        }
-        
-        return (store.maxColsPerRow = count);
-    };
-    
-    
-    var getElements = function (ele) {
+    var getRowData = function (ele) {
         var node = ele.firstChild,
-            a = [];
+            data = {
+                cels: [],
+                lines: [],
+                heights: []
+            };
     
         while (node) {
             if (node.nodeType === 1) {
-                a.push(node);
+                if (attr('ag-cel', node).has()) {
+                    data.cels.push(node);
+                    data.heights.push(node.offsetHeight);
+                }
+                
+                if (attr('ag-line', node).has()) {
+                    data.lines.push(node);
+                }
             }
+            
             node = node.nextSibling;
         }
 
-        return a;
+        return data;
     };
     
-    
-    var getLineDataPerRow = function (node) {
-        var eles = getElements(node),
-            l = eles.length,
-            i = 0,
-            ele,
-            j = 0,
-            maxColsPerRow = getMaxColsPerRow(node) || l,
-            h,
-            a = [];
+
+    var setMinHeight = function (ele) {
+        var data = getRowData(ele),
+            lines = data.lines,
+            i = lines.length,
+            height = Math.max.apply(null, data.heights);
         
-        for (; i < l; i++) {
-            ele = eles[i];
-            
-            if (j % maxColsPerRow === 0) {
-                h = {
-                    lines: [],
-                    height: 0
-                };
-                a.push(h);
-            }
-            
-            //ele is an ag-line
-            if (classList.contains('ag-line', ele)) {
-                h.lines.push(ele);
-            
-            //ele is an ag-cel
-            } else
-            if (!classList.contains('ag-show', ele)) {
-                h.height = Math.max(h.height, ele.offsetHeight);
-                j += 1;
-            }
+        while (i--) {
+            lines[i].style.minHeight = height + 'px';
         }
-        
-        return a;
     };
     
     
     var hasLines = function (ele) {
-        var eles = getElements(ele),
-            i = eles.length;
-        
-        while (i--) {
-            if (classList.contains('ag-line', eles[i])) {
-                return true;
-            }
-        }
-    
-        return false;
+        return !!getRowData(ele).lines.length;
     };
     
     
     var resizeLines = function (ele) {
-        var store = ele.ag;
+        var store = ele.silverag;
         
-        if (!(store.lines && !store.responding)) {
+        if (!(store.hasLines && !store.isResponding)) {
             return;
         }
         
         //Set lines min-height to 0 while new min-height is being calculated
-        classList.add('ag-reflow', ele);
-        
-        var data = getLineDataPerRow(ele),
-            i = data.length;
-        
-        while (i--) {
-            setLinesMinHeight(data[i]);
-        }
-        
-        classList.remove('ag-reflow', ele);
+        attr('ag-reflow', ele).set();
+        setMinHeight(ele);
+        attr('ag-reflow', ele).remove();
     };
     
     
@@ -181,12 +85,12 @@ var layout = (function () {
         if (!supportsMediaQueries) {
             return;
         }
-    
-        var match = ele.className.match(/ag-respond:(\d+)/),
+        
+        var width = attr('ag-res', ele).get(),
             media;
         
-        if (match) {
-            media = 'screen and (max-width:' + match[1] + 'px)';
+        if (width) {
+            media = 'screen and (max-width:' + width + 'px)';
            
             if (mediaMatch(media).matches) {
                 removeModifiers(ele);
@@ -198,22 +102,19 @@ var layout = (function () {
     var initialize = function (ele) {
         
         //Create store to cache internal layout data
-        var store = ele.ag || (ele.ag = {});
+        var store = ele.silverag || (ele.silverag = {});
         
-        if (store.ready) {
+        if (store.isReady) {
             return;
         }
         
-        store.ready = false;
-        store.responding = false;
-        store.lines = hasLines(ele);
-        storeModifiers(ele);
-        
+        store.isReady = true;
+        store.isResponding = false;
+        store.hasLines = hasLines(ele);
+        store.modifiers = attr('ag', ele).get();
         initializeResponsiveLayout(ele);
         resizeLines(ele);
-        
-        classList.add('ag-ready', ele);
-        store.ready = true;
+        attr('ag-ready', ele).set();
     };
     
     

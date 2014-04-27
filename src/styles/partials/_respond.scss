@@ -1,21 +1,21 @@
 $i: 480;
 
 @while $i <= 960 {
-    $ag-respond: "[class~='ag-respond:#{$i}']";
+    $ag-res: "[ag-res='#{$i}']";
 
     @media screen and (min-width: #{$i + 1}px) {
-        [class*='ag-split']#{$ag-respond} > .ag-cel,
-        [class*='ag-split']#{$ag-respond} > .ag-line {
+        [ag]#{$ag-res} > [ag-cel],
+        [ag]#{$ag-res} > [ag-line] {
             display: inline-block;
         }
         
-        [class*='ag-split']#{$ag-respond} > .ag-show {
+        [ag]#{$ag-res} > [ag-cel='show'] {
             display: none;
         }
     }
     
     @media screen and (max-width: #{$i}px) {
-        [class*='ag-split']#{$ag-respond} > .ag-cel {
+        [ag]#{$ag-res} > [ag-cel] {
             width: auto !important;
         }
     }

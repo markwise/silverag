@@ -1,13 +1,11 @@
 @import 'partials/mixins';
 
-$ag-split: "[class*='ag-split']";
-
 /*
- * ag-core
+ * ag
  * -------
  */
 
-#{$ag-split} {
+[ag] {
     visibility: hidden;
     /*
      * Justified alignment doesn't affect the last line of text. If there is 
@@ -47,15 +45,15 @@ $ag-split: "[class*='ag-split']";
     letter-spacing: -.34em\9;
 }
 
-#{$ag-split}.ag-ready {
+[ag-ready] {
     visibility: visible;
 }
 
-#{$ag-split}[class~='ag-space:1'],
-#{$ag-split}[class~='ag-space:2'],
-#{$ag-split}[class~='ag-space:3'],
-#{$ag-split}[class~='ag-space:4'],
-#{$ag-split}[class~='ag-space:5'] {
+[ag~='space:1'],
+[ag~='space:2'],
+[ag~='space:3'],
+[ag~='space:4'],
+[ag~='space:5'] {
     /*
      * Firefox doesn't align the last cels right edge in each line with the 
      * parent containers right edge if cel widths don't add up to 100% and the
@@ -75,7 +73,7 @@ $ag-split: "[class*='ag-split']";
  * Browsers that don't support text-align-last will have a second line added by 
  * inserting an ::after pseudo-element to force a second line
  */
-#{$ag-split}::after {
+[ag]::after {
     content: '';
     display: inline-block;
     /* IE supports text-align-last */
@@ -87,11 +85,11 @@ $ag-split: "[class*='ag-split']";
 }
 
 @-moz-document url-prefix() {
-    #{$ag-split} {
+    [ag] {
         /* Firefox supports text-align-last */
         line-height: normal;
     }
-    #{$ag-split}::after {
+    [ag]::after {
         /* Firefox supports text-align-last */
         display: none;
     }
@@ -103,7 +101,7 @@ $ag-split: "[class*='ag-split']";
  * ------
  */
 
-#{$ag-split} > .ag-cel {
+[ag] > [ag-cel] {
     @include boxSizing('border-box');
     /* IE bug fix to prevent wrapping when resizing */
     min-height: 100%;
@@ -116,61 +114,61 @@ $ag-split: "[class*='ag-split']";
 }
 
 /* Reset line-height with a low specificity making it easy to override */
-.ag-cel {
+[ag-cel] {
     line-height: 1.5;
 }
 
-.ag-hide {
+[ag-cel='hide'] {
     display: none;
 }
 
-#{$ag-split}:not([class*='ag-respond']) > .ag-cel {
+[ag]:not([ag-res]) > [ag-cel] {
     display: inline-block;
 }
 
-#{$ag-split}:not([class*='ag-respond']) > .ag-show {
+[ag]:not([ag-res]) > [ag-cel='show'] {
     display: none;
 }
 
 /* IE8 */
 @media \0screen {
-    #{$ag-split} > .ag-cel {
+    [ag] > [ag-cel] {
         display: inline-block;
     }
-    #{$ag-split} > .ag-show {
+    [ag] > [ag-cel='show'] {
         display: none;
     }
 }
 
 
 /* 
- * ag-align 
+ * align 
  * -------- 
  */
 
-#{$ag-split}[class~='ag-align:t'] > .ag-cel {
+[ag~='align:t'] > [ag-cel] {
     vertical-align: top;
 }
 
-#{$ag-split}[class~='ag-align:m'] > .ag-cel {
+[ag~='align:m'] > [ag-cel] {
     vertical-align: middle;
 }
 
-#{$ag-split}[class~='ag-align:b'] > .ag-cel {
+[ag~='align:b'] > [ag-cel] {
     vertical-align: bottom;
 }
 
 
 /*
- * ag-flip 
+ * flip 
  * -------
  */
 
-#{$ag-split}.ag-flip {
+[ag~='flip'] {
     direction: rtl;
 }
 
-#{$ag-split}.ag-flip > .ag-cel {
+[ag~='flip'] > [ag-cel] {
     direction: ltr;
 }
 
@@ -180,7 +178,7 @@ $ag-split: "[class*='ag-split']";
  * -------
  */
 
-.ag-line {
+[ag-line] {
     display: none;
     overflow: hidden;
     border-top-width: 0 !important;
@@ -194,28 +192,31 @@ $ag-split: "[class*='ag-split']";
     @include transition('opacity .5s');
 }
 
-#{$ag-split}:not([class*='ag-respond']) > .ag-line {
+[ag]:not([ag-res]) > [ag-line] {
     display: inline-block;
 }
 
 /* IE8 */
 @media \0screen {
-    #{$ag-split} > .ag-line {
+    [ag] > [ag-line] {
         display: inline-block;
     }
 }
 
-/* The class ag-ready is added via JavaScript once a layout has been initialized */
-.ag-ready > .ag-line {
+/* 
+ * The attribute ag-ready is added via JavaScript once a layout has been 
+ * initialized 
+ */
+[ag-ready] > [ag-line] {
     visibility: visible;
     opacity: 1;
 }
 
 /* 
- * The class ag-reflow is added via JavaScript temporarily while a layout is 
+ * The attribute ag-reflow is added via JavaScript temporarily while a layout is 
  * being resized
  */
-.ag-reflow > .ag-line {
+[ag-reflow] > [ag-line] {
     min-height: 0 !important;
 }
 

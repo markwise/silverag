@@ -2,6 +2,6 @@
 
 var getLayouts = function () {
     'use strict';
-
-    return doc.querySelectorAll('[class*="ag-split"]');
+    
+    return doc.querySelectorAll('[ag]');
 };

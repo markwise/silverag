@@ -32,7 +32,7 @@ module.exports = function (grunt) {
                 src: [
                     'src/scripts/supports_media_queries.js',
                     'src/scripts/get_layouts.js',
-                    'src/scripts/class_list.js',
+                    'src/scripts/attr_list.js',
                     'src/scripts/layout.js',
                     'src/scripts/layouts.js',
                     'src/scripts/media_match.js',
@@ -182,17 +182,18 @@ module.exports = function (grunt) {
                     'test/vendor/jasmine-jquery/lib/jasmine-jquery.js',
                     'test/vendor/sinon/lib/sinon.js',
                     'test/globals.js',
-                    'src/scripts/supports_media_queries.js',
-                    'src/scripts/get_layouts.js',
-                    'src/scripts/class_list.js',
-                    'src/scripts/layout.js',
-                    'src/scripts/layouts.js',
-                    'src/scripts/media_match.js',
-                    'src/scripts/media_query.js',
-                    'src/scripts/dom_ready.js',
-                    'src/scripts/initialize.js',
+                    //'src/scripts/supports_media_queries.js',
+                    //'src/scripts/get_layouts.js',
+                    //'src/scripts/class_list.js',
                     'src/scripts/attr_list.js',
-                    'test/specs/**/*.js'
+                    //'src/scripts/layout.js',
+                    //'src/scripts/layouts.js',
+                    //'src/scripts/media_match.js',
+                    //'src/scripts/media_query.js',
+                    //'src/scripts/dom_ready.js',
+                    //'src/scripts/initialize.js',
+                    //'test/specs/**/*.js'
+                    'test/specs/attr_list_spec.js'
                 ],
                 //exclude: [
                     //'src/scripts/header.js',

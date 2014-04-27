@@ -1,3 +1,5 @@
+/* global win */
+
 var attr = (function () {
     'use strict';
     
@@ -27,6 +29,13 @@ var attr = (function () {
         str = trim(str);
         del || (del = /\s+/);
         return str.length ? str.split(del) : [];
+    };
+    
+    
+    var forceIE8Repaint = function () {
+        if (!win.addEventListener) {
+            ele.className = ele.className;
+        }
     };
     
         
@@ -124,6 +133,7 @@ var attr = (function () {
         
         set: function (val) {
             set(val);
+            forceIE8Repaint();
             reset();
         },
         
@@ -135,11 +145,13 @@ var attr = (function () {
         
         add: function (val) {
             add(val);
+            forceIE8Repaint();
             reset();
         },
         
         remove: function (val) {
             remove(val);
+            forceIE8Repaint();
             reset();
         }
     };
