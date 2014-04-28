@@ -11,8 +11,21 @@ mediaMatch
 var layout = (function () {
     'use strict';
     
+    var removeMinHeight = function (ele) {
+        var eles = getElements(ele),
+            i = eles.length;
+        
+        while (i--) {
+            attr('style', eles[i]).remove();
+        }
+    };
+    
+    
     var removeModifiers = function (ele) {
         attr('ag', ele).remove();
+        attr('ag-reflow', ele).set();
+        removeMinHeight(ele);
+        attr('ag-reflow', ele).remove();
         ele.silverag.isResponding = true;
     };
     
@@ -23,60 +36,54 @@ var layout = (function () {
     };
     
     
-    var getRowData = function (ele) {
+    var getElements = function (ele) {
         var node = ele.firstChild,
-            data = {
-                cels: [],
-                lines: [],
-                heights: []
-            };
-    
+            a = [];
+
         while (node) {
             if (node.nodeType === 1) {
-                if (attr('ag-cel', node).has()) {
-                    data.cels.push(node);
-                    data.heights.push(node.offsetHeight);
-                }
-                
-                if (attr('ag-line', node).has()) {
-                    data.lines.push(node);
-                }
+                a.push(node);
             }
             
             node = node.nextSibling;
         }
 
-        return data;
+        return a;
     };
     
-
-    var setMinHeight = function (ele) {
-        var data = getRowData(ele),
-            lines = data.lines,
-            i = lines.length,
-            height = Math.max.apply(null, data.heights);
+    
+    var getMinHeight = function (eles) {
+        var i = eles.length,
+            a = [],
+            ele;
         
         while (i--) {
-            lines[i].style.minHeight = height + 'px';
+            ele = eles[i];
+            
+            if (attr('ag-cel', ele).has()) {
+                a.push(ele.offsetHeight);
+            }
         }
-    };
-    
-    
-    var hasLines = function (ele) {
-        return !!getRowData(ele).lines.length;
-    };
-    
-    
-    var resizeLines = function (ele) {
-        var store = ele.silverag;
         
-        if (!(store.hasLines && !store.isResponding)) {
+        return Math.max.apply(null, a);
+    };
+    
+    
+    var calculateMinHeight = function (ele) {
+        if (ele.silverag.isResponding) {
             return;
         }
-        
-        //Set lines min-height to 0 while new min-height is being calculated
+    
         attr('ag-reflow', ele).set();
-        setMinHeight(ele);
+        
+        var eles = getElements(ele),
+            minHeight = getMinHeight(eles),
+            i = eles.length;
+        
+        while (i--) {
+            eles[i].style.minHeight = minHeight + 'px';
+        }
+        
         attr('ag-reflow', ele).remove();
     };
     
@@ -110,10 +117,9 @@ var layout = (function () {
         
         store.isReady = true;
         store.isResponding = false;
-        store.hasLines = hasLines(ele);
         store.modifiers = attr('ag', ele).get();
         initializeResponsiveLayout(ele);
-        resizeLines(ele);
+        calculateMinHeight(ele);
         attr('ag-ready', ele).set();
     };
     
@@ -122,6 +128,6 @@ var layout = (function () {
         removeModifiers: removeModifiers,
         applyModifiers: applyModifiers,
         initialize: initialize,
-        resizeLines: resizeLines
+        calculateMinHeight: calculateMinHeight
     };
 }());

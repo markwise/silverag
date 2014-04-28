@@ -38,7 +38,7 @@ var layouts = (function () {
     
     
     var resize = function () {
-        delegate(layout.resizeLines);
+        delegate(layout.calculateMinHeight);
     };
     
     
