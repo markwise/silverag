@@ -36,22 +36,6 @@ var layout = (function () {
     };
     
     
-    var getElements = function (ele) {
-        var node = ele.firstChild,
-            a = [];
-
-        while (node) {
-            if (node.nodeType === 1) {
-                a.push(node);
-            }
-            
-            node = node.nextSibling;
-        }
-
-        return a;
-    };
-    
-    
     var getMinHeight = function (eles) {
         var i = eles.length,
             a = [],
@@ -106,21 +90,85 @@ var layout = (function () {
     };
     
     
+    var filter = function (eles, filter) {
+        var i = eles.length,
+            a = [],
+            ele;
+        
+        while (i--) {
+            ele = eles[i];
+            if (attr(filter, ele).has()) {
+                a.push(ele);
+            }
+        }
+        
+        return a;
+    };
+    
+    
+    var getElements = function (ele) {
+        var node = ele.firstChild,
+            a = [];
+
+        while (node) {
+            if (node.nodeType === 1) {
+                a.push(node);
+            }
+            
+            node = node.nextSibling;
+        }
+
+        return a;
+    };
+    
+    
+    var hasFlipModifier = function (ele, modifiers) {
+        return /(?:^|\s+)flip(?:\s+|$)/.test(modifiers);
+    };
+    
+    
+    var hasAlignModifier = function (ele, modifiers) {
+        return /(?:^|\s+)align:[tmb](?:\s+|$)/.test(modifiers);    
+    };
+    
+    
+    var hasSpaceModifier = function (ele, modifiers) {
+        return /(?:^|\s+)space:[12345](?:\s+|$)/.test(modifiers);
+    };
+    
+    
+    var hasSplitModifier = function (ele, modifiers) {
+        return /(?:^|\s+)split:(?:[2345]|[1]\/[23]|[23]\/1|2\/3|3\/2)(?:\s+|$)/.test(modifiers);
+    };
+    
+    
     var initialize = function (ele) {
         
         //Create store to cache internal layout data
-        var store = ele.silverag || (ele.silverag = {});
+        var store = ele.silverag || (ele.silverag = {}),
+            modifiers,
+            eles;
         
-        if (store.isReady) {
+        //Initialize once
+        if (store.initialized !== void 0) {
             return;
         }
         
-        store.isReady = true;
+        store.initialized = false;
         store.isResponding = false;
-        store.modifiers = attr('ag', ele).get();
+        store.modifiers = modifiers = attr('ag', ele).get();
+        store.hasSplitModifier = hasSplitModifier(ele, modifiers);
+        store.hasAlignModifier = hasAlignModifier(ele, modifiers);
+        store.hasSpaceModifier = hasSpaceModifier(ele, modifiers)
+        store.hasFlipModifier = hasFlipModifier(ele, modifiers);
+        store.eles = eles = getElements(ele);
+        store.cels = filter(eles, 'ag-cel');
+        store.lines = filter(eles, 'ag-line');
+        store.hasLines = !!store.lines.length;
         initializeResponsiveLayout(ele);
         calculateMinHeight(ele);
         attr('ag-ready', ele).set();
+        store.initialized = true;
     };
     
     
