@@ -128,7 +128,7 @@ var layout = (function () {
     
     
     var hasAlignModifier = function (ele, modifiers) {
-        return /(?:^|\s+)align:[tmb](?:\s+|$)/.test(modifiers);    
+        return /(?:^|\s+)align:[tmb](?:\s+|$)/.test(modifiers);
     };
     
     
@@ -159,7 +159,7 @@ var layout = (function () {
         store.modifiers = modifiers = attr('ag', ele).get();
         store.hasSplitModifier = hasSplitModifier(ele, modifiers);
         store.hasAlignModifier = hasAlignModifier(ele, modifiers);
-        store.hasSpaceModifier = hasSpaceModifier(ele, modifiers)
+        store.hasSpaceModifier = hasSpaceModifier(ele, modifiers);
         store.hasFlipModifier = hasFlipModifier(ele, modifiers);
         store.eles = eles = getElements(ele);
         store.cels = filter(eles, 'ag-cel');
