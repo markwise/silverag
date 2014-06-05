@@ -178,7 +178,7 @@ module.exports = function (grunt) {
             options: {
                 frameworks: ['jasmine'],
                 files: [
-                    'test/vendor/jquery/jquery.js',
+                    'test/vendor/jquery/dist/jquery.js',
                     'test/vendor/jasmine-jquery/lib/jasmine-jquery.js',
                     'test/vendor/sinon/lib/sinon.js',
                     'test/globals.js',
