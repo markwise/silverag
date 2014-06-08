@@ -12,11 +12,20 @@ var layout = (function () {
     'use strict';
     
     var removeMinHeight = function (ele) {
-        var eles = getElements(ele),
-            i = eles.length;
+        var store = ele.silverag,
+            eles = store.hasAlignModifier ? store.lines : store.eles,
+            i = eles.length,
+            style,
+            match;
         
         while (i--) {
-            attr('style', eles[i]).remove();
+            ele = eles[i];
+            style = attr('style', ele).get();
+            match = style.match(/min-height:\s*\d+px;/g);
+            
+            if (match) {
+                attr('style', ele).remove(match[0]);
+            }
         }
     };
     
@@ -26,27 +35,22 @@ var layout = (function () {
         attr('ag-reflow', ele).set();
         removeMinHeight(ele);
         attr('ag-reflow', ele).remove();
-        ele.silverag.isResponding = true;
+        ele.silverag.responding = true;
     };
     
     
     var applyModifiers = function (ele) {
         attr('ag', ele).set(ele.silverag.modifiers);
-        ele.silverag.isResponding = false;
+        ele.silverag.responding = false;
     };
     
     
     var getMinHeight = function (eles) {
         var i = eles.length,
-            a = [],
-            ele;
+            a = [];
         
         while (i--) {
-            ele = eles[i];
-            
-            if (attr('ag-cel', ele).has()) {
-                a.push(ele.offsetHeight);
-            }
+            a.push(eles[i].offsetHeight);
         }
         
         return Math.max.apply(null, a);
@@ -54,15 +58,16 @@ var layout = (function () {
     
     
     var calculateMinHeight = function (ele) {
-        if (ele.silverag.isResponding) {
+        if (ele.silverag.responding) {
             return;
         }
     
         attr('ag-reflow', ele).set();
         
-        var eles = getElements(ele),
-            minHeight = getMinHeight(eles),
-            i = eles.length;
+        var store = ele.silverag,
+            eles = store.hasAlignModifier ? store.lines : store.eles,
+            i = eles.length,
+            minHeight = getMinHeight(store.cels);
         
         while (i--) {
             eles[i].style.minHeight = minHeight + 'px';
@@ -128,7 +133,7 @@ var layout = (function () {
     
     
     var hasAlignModifier = function (ele, modifiers) {
-        return /(?:^|\s+)align:[tmb](?:\s+|$)/.test(modifiers);    
+        return /(?:^|\s+)align:[tmb](?:\s+|$)/.test(modifiers);
     };
     
     
@@ -155,11 +160,11 @@ var layout = (function () {
         }
         
         store.initialized = false;
-        store.isResponding = false;
+        store.responding = false;
         store.modifiers = modifiers = attr('ag', ele).get();
         store.hasSplitModifier = hasSplitModifier(ele, modifiers);
         store.hasAlignModifier = hasAlignModifier(ele, modifiers);
-        store.hasSpaceModifier = hasSpaceModifier(ele, modifiers)
+        store.hasSpaceModifier = hasSpaceModifier(ele, modifiers);
         store.hasFlipModifier = hasFlipModifier(ele, modifiers);
         store.eles = eles = getElements(ele);
         store.cels = filter(eles, 'ag-cel');

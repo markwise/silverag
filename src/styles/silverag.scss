@@ -103,7 +103,6 @@
 
 [ag] > [ag-cel] {
     @include boxSizing('border-box');
-    /* IE bug fix to prevent wrapping when resizing */
     min-height: 100%;
     vertical-align: top;
     /* Reset the following */
@@ -156,6 +155,12 @@
 
 [ag~='align:b'] > [ag-cel] {
     vertical-align: bottom;
+}
+
+[ag~='align:t'] > [ag-cel],
+[ag~='align:m'] > [ag-cel],
+[ag~='align:b'] > [ag-cel] {
+    min-height: 0;
 }
 
 
@@ -216,12 +221,8 @@
  * The attribute ag-reflow is added via JavaScript temporarily while a layout is 
  * being resized
  */
-
 [ag-reflow] > [ag-cel],
-[ag-reflow] > [ag-line],
-[ag~='align:t'] > [ag-cel],
-[ag~='align:m'] > [ag-cel],
-[ag~='align:b'] > [ag-cel] {
+[ag-reflow] > [ag-line] {
     min-height: 0 !important;
 }
 
