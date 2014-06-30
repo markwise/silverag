@@ -1,4 +1,6 @@
 /* global
+win,
+doc,
 supportsMediaQueries,
 attr,
 mediaMatch
@@ -45,8 +47,9 @@ var layout = (function () {
     };
     
     
-    var getMinHeight = function (eles) {
-        var i = eles.length,
+    var getContentMaxHeight = function (ele) {
+        var eles = ele.silverag.eles,
+            i = eles.length,
             a = [];
         
         while (i--) {
@@ -54,6 +57,27 @@ var layout = (function () {
         }
         
         return Math.max.apply(null, a);
+    };
+    
+    
+    var getMinHeight = function (ele) {
+        var style = win.getComputedStyle,
+            height;
+
+        //DOM Level 2 accessor
+        if (style) {
+            height = style(ele, null).height;
+        
+        //IE8
+        } else {
+            height = ele.currentStyle.height;
+            
+            if (height === 'auto') {
+                height = getContentMaxHeight(ele) + 'px';
+            }
+        }
+        
+        return height;
     };
     
     
@@ -67,10 +91,10 @@ var layout = (function () {
         var store = ele.silverag,
             eles = store.hasAlignModifier ? store.lines : store.eles,
             i = eles.length,
-            minHeight = getMinHeight(store.cels);
+            minHeight = getMinHeight(ele);
         
         while (i--) {
-            eles[i].style.minHeight = minHeight + 'px';
+            eles[i].style.minHeight = minHeight;
         }
         
         attr('ag-reflow', ele).remove();
@@ -95,29 +119,39 @@ var layout = (function () {
     };
     
     
-    var filter = function (eles, filter) {
-        var i = eles.length,
-            a = [],
-            ele;
+    var createLine = function (lines) {
+        var fragment = doc.createDocumentFragment(),
+            line = doc.createElement('div');
         
-        while (i--) {
-            ele = eles[i];
-            if (attr(filter, ele).has()) {
-                a.push(ele);
-            }
-        }
+        lines.push(line);
+        attr('ag-line', line).set();
+        fragment.appendChild(doc.createTextNode(' '));
+        fragment.appendChild(line);
+        fragment.appendChild(doc.createTextNode(' '));
         
-        return a;
+        return fragment;
     };
     
     
-    var getElements = function (ele) {
+    var createLines = function (ele, cels, lines) {
+        var eles = cels.slice(1),
+            i = eles.length;
+        
+        while (i--) {
+            ele.insertBefore(createLine(lines), eles[i]);
+        }
+    };
+    
+    
+    var getVisibleElements = function (ele) {
         var node = ele.firstChild,
             a = [];
 
         while (node) {
             if (node.nodeType === 1) {
-                a.push(node);
+                if (!attr('ag-cel', node).has('show')) {
+                    a.push(node);
+                }
             }
             
             node = node.nextSibling;
@@ -147,8 +181,13 @@ var layout = (function () {
     };
     
     
+    var hasLineModifier = function (ele, modifiers) {
+        return /(?:^|\s+)lines(?:\s+|$)/.test(modifiers);
+    };
+    
+    
     var initialize = function (ele) {
-        
+
         //Create store to cache internal layout data
         var store = ele.silverag || (ele.silverag = {}),
             modifiers,
@@ -166,10 +205,11 @@ var layout = (function () {
         store.hasAlignModifier = hasAlignModifier(ele, modifiers);
         store.hasSpaceModifier = hasSpaceModifier(ele, modifiers);
         store.hasFlipModifier = hasFlipModifier(ele, modifiers);
-        store.eles = eles = getElements(ele);
-        store.cels = filter(eles, 'ag-cel');
-        store.lines = filter(eles, 'ag-line');
-        store.hasLines = !!store.lines.length;
+        store.hasLineModifier = hasLineModifier(ele, modifiers);
+        store.cels = getVisibleElements(ele);
+        store.lines = [];
+        createLines(ele, store.cels, store.lines);
+        store.eles = getVisibleElements(ele);
         initializeResponsiveLayout(ele);
         calculateMinHeight(ele);
         attr('ag-ready', ele).set();

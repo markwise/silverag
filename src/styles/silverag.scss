@@ -145,15 +145,18 @@
  * -------- 
  */
 
-[ag~='align:t'] > [ag-cel] {
+[ag~='align:t'] > [ag-cel],
+[ag~='align:t'] > [ag-line] {
     vertical-align: top;
 }
 
-[ag~='align:m'] > [ag-cel] {
+[ag~='align:m'] > [ag-cel],
+[ag~='align:m'] > [ag-line] {
     vertical-align: middle;
 }
 
-[ag~='align:b'] > [ag-cel] {
+[ag~='align:b'] > [ag-cel],
+[ag~='align:b'] > [ag-line] {
     vertical-align: bottom;
 }
 
@@ -185,12 +188,15 @@
 
 [ag-line] {
     display: none;
+    position: relative;
+    z-index: 1;
     overflow: hidden;
+    margin: 0 -1px;
     border-top-width: 0 !important;
     border-right-width: 0 !important;
     border-bottom-width: 0 !important;
-    border: 1px solid #ccc;
     width: 0;
+    min-height: 100%;
     vertical-align: top;
     visibility: hidden;
     opacity: 0;
@@ -212,7 +218,8 @@
  * The attribute ag-ready is added via JavaScript once a layout has been 
  * initialized 
  */
-[ag-ready] > [ag-line] {
+[ag~='lines'][ag-ready] > [ag-line] {
+    border: 1px solid #ccc;
     visibility: visible;
     opacity: 1;
 }
