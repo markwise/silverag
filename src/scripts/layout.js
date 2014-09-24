@@ -112,7 +112,7 @@ var layout = (function () {
 		
 		if (width) {
 			media = 'screen and (max-width:' + width + 'px)';
-		   
+
 			if (mediaMatch(media).matches) {
 				removeModifiers(ele);
 			}
