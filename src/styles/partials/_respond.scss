@@ -4,8 +4,7 @@ $i: 480;
     $ag-res: "[ag-res='#{$i}']";
 
     @media screen and (min-width: #{$i + 1}px) {
-        [ag]#{$ag-res} > [ag-cel],
-        [ag]#{$ag-res} > [ag-line] {
+        [ag]#{$ag-res} > [ag-cel] {
             display: inline-block;
         }
         
@@ -18,6 +17,10 @@ $i: 480;
         [ag]#{$ag-res} > [ag-cel] {
             width: auto !important;
         }
+        
+        #{$ag-res} > [ag-line] {
+			display: none;
+		}
     }
     
     $i: $i + 20;

@@ -185,44 +185,48 @@
  * ag-line
  * -------
  */
-
+ 
 [ag-line] {
-    display: none;
-    position: relative;
-    z-index: 1;
-    overflow: hidden;
-    margin: 0 -1px;
-    border-top-width: 0 !important;
-    border-right-width: 0 !important;
-    border-bottom-width: 0 !important;
-    width: 0;
-    min-height: 100%;
-    vertical-align: top;
-    visibility: hidden;
-    opacity: 0;
-    @include transition('opacity .5s');
+	display: inline-block;
+	width: 0;
+	background: #ccc;
+	vertical-align: top;
 }
 
-[ag]:not([ag-res]) > [ag-line] {
-    display: inline-block;
+[ag~='lines'] > [ag-line],
+[ag~='lines:hide:1'] > [ag-line],
+[ag~='lines:hide:2'] > [ag-line],
+[ag~='lines:hide:3'] > [ag-line],
+[ag~='lines:hide:4'] > [ag-line],
+[ag~='lines:hide:5'] > [ag-line],
+[ag~='lines:hide:6'] > [ag-line],
+[ag~='lines:hide:7'] > [ag-line],
+[ag~='lines:hide:8'] > [ag-line],
+[ag~='lines:hide:9'] > [ag-line],
+[ag~='lines:show:1'] > [ag-line='1'],
+[ag~='lines:show:2'] > [ag-line='2'],
+[ag~='lines:show:3'] > [ag-line='3'],
+[ag~='lines:show:4'] > [ag-line='4'],
+[ag~='lines:show:5'] > [ag-line='5'],
+[ag~='lines:show:6'] > [ag-line='6'],
+[ag~='lines:show:7'] > [ag-line='7'],
+[ag~='lines:show:8'] > [ag-line='8'],
+[ag~='lines:show:9'] > [ag-line='9'] {
+	width: 1px;
 }
 
-/* IE8 */
-@media \0screen {
-    [ag] > [ag-line] {
-        display: inline-block;
-    }
+[ag~='lines:hide:1'] > [ag-line='1'],
+[ag~='lines:hide:2'] > [ag-line='2'],
+[ag~='lines:hide:3'] > [ag-line='3'],
+[ag~='lines:hide:4'] > [ag-line='4'],
+[ag~='lines:hide:5'] > [ag-line='5'],
+[ag~='lines:hide:6'] > [ag-line='6'],
+[ag~='lines:hide:7'] > [ag-line='7'],
+[ag~='lines:hide:8'] > [ag-line='8'],
+[ag~='lines:hide:9'] > [ag-line='9'] {
+	width: 0;
 }
 
-/* 
- * The attribute ag-ready is added via JavaScript once a layout has been 
- * initialized 
- */
-[ag~='lines'][ag-ready] > [ag-line] {
-    border: 1px solid #ccc;
-    visibility: visible;
-    opacity: 1;
-}
 
 /* 
  * The attribute ag-reflow is added via JavaScript temporarily while a layout is 
