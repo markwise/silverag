@@ -38,18 +38,18 @@ var layout = (function () {
 	
 	var removeModifiers = function (ele) {
 		var store = keyStore.get(ele.agid);
+		store.responding = true;
 		attr('ag', ele).remove();
 		attr('ag-reflow', ele).set();
 		removeMinHeight(ele);
 		attr('ag-reflow', ele).remove();
-		store.responding = true;
 	};
 	
 	
 	var applyModifiers = function (ele) {
 		var store = keyStore.get(ele.agid);
-		attr('ag', ele).set(store.modifiers);
 		store.responding = false;
+		attr('ag', ele).set(store.modifiers);
 	};
 	
 	
@@ -88,7 +88,7 @@ var layout = (function () {
 	};
 	
 	
-	var calculateMinHeight = function (ele) {
+	var resizeMinHeight = function (ele) {
 		var store = keyStore.get(ele.agid);
 		
 		if (store.responding) {
@@ -234,7 +234,7 @@ var layout = (function () {
 		createLines(ele, store.cels, store.lines);
 		store.eles = getVisibleElements(ele);
 		initializeResponsiveLayout(ele);
-		calculateMinHeight(ele);
+		resizeMinHeight(ele);
 		attr('ag-ready', ele).set();
 	};
     
@@ -243,6 +243,6 @@ var layout = (function () {
         removeModifiers: removeModifiers,
         applyModifiers: applyModifiers,
         initialize: initialize,
-        calculateMinHeight: calculateMinHeight
+        resizeMinHeight: resizeMinHeight
     };
 }());

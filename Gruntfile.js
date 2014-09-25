@@ -40,7 +40,8 @@ module.exports = function (grunt) {
                     'src/scripts/media_match.js',
                     'src/scripts/media_query.js',
                     'src/scripts/content_loaded.js',
-                    'src/scripts/initialize.js'
+                    'src/scripts/initialize.js',
+                    'src/scripts/resize.js'
                 ],
                 dest: '.tmp/concat.js'
             },

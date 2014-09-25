@@ -37,22 +37,15 @@ var layouts = (function () {
     };
     
     
-    var resize = function () {
-        delegate(layout.calculateMinHeight);
+    var resizeMinHeight = function () {
+        delegate(layout.resizeMinHeight);
     };
-    
-    
-    if (win.addEventListener) {
-        win.addEventListener('resize', resize);
-    } else {
-        win.attachEvent('onresize', resize);
-    }
     
     
     return {
         removeModifiers: removeModifiers,
         applyModifiers: applyModifiers,
         initialize: initialize,
-        resize: resize
+        resizeMinHeight: resizeMinHeight
     };
 }());
