@@ -3,10 +3,14 @@ win,
 doc,
 supportsMediaQueries,
 attr,
-mediaMatch
+mediaMatch,
+generateAgId,
+keyStore
 */
 
 //requires: supports_media_queries
+//requires: generate_agid
+//requires: key_store
 //requires: attr_list
 //requires: media_match
 
@@ -14,7 +18,7 @@ var layout = (function () {
     'use strict';
     
     var removeMinHeight = function (ele) {
-		var store = ele.silverag,
+		var store = keyStore.get(ele.agid),
 			eles = store.hasAlignModifier ? store.lines : store.eles,
 			i = eles.length,
 			style,
@@ -33,23 +37,25 @@ var layout = (function () {
 	
 	
 	var removeModifiers = function (ele) {
+		var store = keyStore.get(ele.agid);
 		attr('ag', ele).remove();
 		attr('ag-reflow', ele).set();
 		removeMinHeight(ele);
 		attr('ag-reflow', ele).remove();
-		ele.silverag.responding = true;
-		
+		store.responding = true;
 	};
 	
 	
 	var applyModifiers = function (ele) {
-		attr('ag', ele).set(ele.silverag.modifiers);
-		ele.silverag.responding = false;
+		var store = keyStore.get(ele.agid);
+		attr('ag', ele).set(store.modifiers);
+		store.responding = false;
 	};
 	
 	
 	var getContentMaxHeight = function (ele) {
-		var eles = ele.silverag.eles,
+		var store = keyStore.get(ele.agid),
+			eles = store.eles,
 			i = eles.length,
 			a = [];
 		
@@ -83,14 +89,15 @@ var layout = (function () {
 	
 	
 	var calculateMinHeight = function (ele) {
-		if (ele.silverag.responding) {
+		var store = keyStore.get(ele.agid);
+		
+		if (store.responding) {
 			return;
 		}
 	
 		attr('ag-reflow', ele).set();
 		
-		var store = ele.silverag,
-			eles = store.hasAlignModifier ? store.lines : store.eles,
+		var eles = store.hasAlignModifier ? store.lines : store.eles,
 			i = eles.length,
 			minHeight = getMinHeight(ele);
 		
@@ -206,16 +213,14 @@ var layout = (function () {
 	
 	var initialize = function (ele) {
 
-		//Create store to cache internal layout data
-		var store = ele.silverag || (ele.silverag = {}),
-			modifiers;
-		
-		//Initialize once
-		if (store.initialized !== void 0) {
+		if (ele.agid !== void 0) {
 			return;
 		}
 		
-		store.initialized = false;
+		var agid = generateAgId(ele),
+			store = keyStore.create(agid),
+			modifiers;
+		
 		store.responding = false;
 		store.modifiers = modifiers = attr('ag', ele).get();
 		store.hasSplitModifier = hasSplitModifier(ele, modifiers);
@@ -231,7 +236,6 @@ var layout = (function () {
 		initializeResponsiveLayout(ele);
 		calculateMinHeight(ele);
 		attr('ag-ready', ele).set();
-		store.initialized = true;
 	};
     
     

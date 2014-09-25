@@ -31,6 +31,8 @@ module.exports = function (grunt) {
                 },
                 src: [
                     'src/scripts/supports_media_queries.js',
+                    'src/scripts/generate_agid.js',
+                    'src/scripts/key_store.js',
                     'src/scripts/get_layouts.js',
                     'src/scripts/attr_list.js',
                     'src/scripts/layout.js',
