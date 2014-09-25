@@ -1,51 +1,49 @@
-/* global
-win,
-layout,
-getLayouts
-*/
+/* global win, layout, getLayouts */
 
-//requires: attr_list
-//requires: layout
+//
+// A pass through module that iterates through a collection of layouts calling 
+// matching methods in the layout module
+//
 
 var layouts = (function () {
     'use strict';
-        
+    
+    //
+    // A generic delegation function that iterates through a NodeList calling
+    // {fn} for each item in {eles} with node as its argument
+    //
+    // @param {Function} fn
+    //      The matching method in the layout module to call on each iteration
+    //
+    // @param {NodeList|undefined} eles
+    //      A collection of layouts to iterate through
+    //
+    
     var delegate = function (fn, eles) {
         eles || (eles = getLayouts());
         
-        var l = eles.length,
-            i = 0;
+        var i = eles.length;
         
-        for (; i < l; i++) {
+        while (i--) {
             fn(eles[i]);
         }
     };
-
-
-    var removeModifiers = function (eles) {
-        delegate(layout.removeModifiers, eles);
-    };
-    
-    
-    var applyModifiers = function (eles) {
-        delegate(layout.applyModifiers, eles);
-    };
-    
-    
-    var initialize = function (eles) {
-        delegate(layout.initialize, eles);
-    };
-    
-    
-    var resizeMinHeight = function () {
-        delegate(layout.resizeMinHeight);
-    };
-    
     
     return {
-        removeModifiers: removeModifiers,
-        applyModifiers: applyModifiers,
-        initialize: initialize,
-        resizeMinHeight: resizeMinHeight
+        initialize: function (eles) {
+            delegate(layout.initialize, eles);
+        },
+    
+        removeModifiers: function (eles) {
+            delegate(layout.removeModifiers, eles);
+        },
+        
+        applyModifiers: function (eles) {
+            delegate(layout.applyModifiers, eles);
+        },
+        
+        resizeMinHeight: function () {
+            delegate(layout.resizeMinHeight);
+        }
     };
 }());
