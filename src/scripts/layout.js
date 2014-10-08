@@ -21,27 +21,36 @@ var layout = (function () {
 	//
 	// @private
 	//
-	// Returns the largest offsetHeight value of all ag-cel elements to be used
-	// as the min-height. As the method name implies, this is for IE8 only.
+	// Returns the largest offsetHeight value of all visible ag-cel elements to 
+	// be used as the min-height.
+	//
+	// For IE8, element.currentStyle.height returns the exact unit set by the 
+	// author or auto if nothing is defined. In modern browsers, 
+	// window.getComputedStyle(element, null).height always return a px unit 
+	// value regardless of how the author defined it.
 	//
 	// @param {HTMLElement} ele
 	//		An ag element
 	//
-	// @returns {Number}
-	//		The min-height value
-	//
+	// @returns {String}
+	//		The min-height value with a px unit
 	//
 	
-	var getContentMaxHeightIE8 = function (ele) {
-		var eles = getVisibleElements(ele),
-			i = eles.length,
+	var getMinHeightIE8 = function (ele) {
+		var node = ele.firstChild,
 			a = [];
-	
-		while (i--) {
-			a.push(eles[i].offsetHeight);
+		
+		while (node) {
+			if (node.canHaveChildren) {
+				if (node.currentStyle.display !== 'none') {
+					a.push(node.offsetHeight);
+				}
+			}
+		
+			node = node.nextSibling;
 		}
 		
-		return Math.max.apply(null, a);
+		return Math.max.apply(null, a) + 'px';
 	};
 	
 	
@@ -54,28 +63,14 @@ var layout = (function () {
 	// @param {HTMLElement} ele
 	//		An ag element
 	//
-	// @returns {Number}
-	//		The min-height value
+	// @returns {String}
+	//		The min-height value with a px unit
 	//
 
 	var getMinHeight = function (ele) {
-		var style = win.getComputedStyle,
-			height;
-
-		//DOM Level 2 accessor
-		if (style) {
-			height = style(ele, null).height;
-	
-		//IE8
-		} else {
-			height = ele.currentStyle.height;
+		var style = win.getComputedStyle;
 		
-			if (height === 'auto') {
-				height = getContentMaxHeightIE8(ele) + 'px';
-			}
-		}
-	
-		return height;
+		return style ? style(ele, null).height : getMinHeightIE8(ele);
 	};
 
 	
