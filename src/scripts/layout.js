@@ -21,13 +21,7 @@ var layout = (function () {
 	//
 	// @private
 	//
-	// Returns the largest offsetHeight value of all visible ag-cel elements to 
-	// be used as the min-height.
-	//
-	// For IE8, element.currentStyle.height returns the exact unit set by the 
-	// author or auto if nothing is defined. In modern browsers, 
-	// window.getComputedStyle(element, null).height always return a px unit 
-	// value regardless of how the author defined it.
+	// Returns the largest offsetHeight value of all visible elements
 	//
 	// @param {HTMLElement} ele
 	//		An ag element
@@ -37,19 +31,12 @@ var layout = (function () {
 	//
 	
 	var getMinHeightIE8 = function (ele) {
-		var node = ele.firstChild,
-			a = [];
-		
-		while (node) {
-			if (node.canHaveChildren) {
-				if (node.currentStyle.display !== 'none') {
-					a.push(node.offsetHeight);
-				}
-			}
-		
-			node = node.nextSibling;
-		}
-		
+		var a = [];
+
+		forEachVisibleElement(ele, function (node) {
+			a.push(node.offsetHeight);
+		});
+
 		return Math.max.apply(null, a) + 'px';
 	};
 	
@@ -104,31 +91,70 @@ var layout = (function () {
 	//
 	// @private
 	//
-	// Returns all visible ag-cel elements unless they have the show modifier,
-	// which are hidden by default when not responding.
+	// Iterates over all child element nodes in {ele} calling {fn} for each
+	// child element. When {fn} is called, it will be passed the current 
+	// element in the iteration and a index value. The index starts at 1 and
+	// is the order in relation to other siblings not the DOM index value.
 	//
 	// @param {HTMLElement} ele
 	//		An ag element
 	//
-	// @returns {Array}
-	//		A list of all visible ag-cel elements
+	// @param {Function} fn
+	//		Callback function that will be passed the current element in the
+	//		iteration and a index value
 	//
 
-	var getVisibleElements = function (ele) {
-		var node = ele.firstChild,
-			a = [];
+	var forEachElement = function (ele, fn) {
+		var node = ele.firstElementChild,
+			index = 1;
 
-		while (node) {
-			if (node.nodeType === 1) {
-				if (!attr('ag-cel', node).has('show')) {
-					a.push(node);
-				}
+		if (node) {
+			while (node) {
+				fn(node, index);
+				node = node.nextElementSibling;
+				index += 1;
 			}
+	
+		//IE8
+		} else {
+			node = ele.firstChild;
+	
+			while (node) {
+				if (node.canHaveChildren) {
+					fn(node, index);
+					index += 1;
+				}
 		
-			node = node.nextSibling;
+				node = node.nextSibling;
+			}
 		}
-
-		return a;
+	};
+	
+	
+	//
+	// @private
+	//
+	// A pass through call to forEachElement to filter visible elements. This
+	// will exclude ag-cel elements that have the modifer show, which sets
+	// an element's display to none.
+	//
+	// @param {HTMLElement} ele
+	//		An ag element
+	//
+	// @param {Function} fn
+	//		Callback function that will be passed the current element in the
+	//		iteration and a index value
+	//
+	
+	var forEachVisibleElement = function (ele, fn) {
+		var index = 1;
+	
+		forEachElement(ele, function (node) {
+			if (node.offsetWidth > 0 && node.offsetHeight > 0) {
+				fn(node, index);
+				index += 1;
+			}
+		});
 	};
 
 
@@ -160,7 +186,7 @@ var layout = (function () {
 			}
 		}
 	};
-
+	
 	
 	//
 	// @private
@@ -172,12 +198,11 @@ var layout = (function () {
 	//
 
 	var createLines = function (ele) {
-		var eles = getVisibleElements(ele).slice(1),
-			i = eles.length;
-	
-		while (i--) {
-			ele.insertBefore(createLine(i + 1), eles[i]);
-		}
+		forEachVisibleElement(ele, function (node, index) {
+			if (index > 1) {
+				ele.insertBefore(createLine(index - 1), node);
+			}
+		});
 	};
 
 	
