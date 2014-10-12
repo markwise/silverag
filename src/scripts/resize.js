@@ -61,9 +61,9 @@ var resize = (function () {
         // IE8 fires a resize event when the height of an element is changed
         // regardless if the window was actually resized. Because the resize 
         // event is used to adjust height values of ag elements, we end up in an
-        // endless loop each time a height value is changed. By first disabling
-        // the resize event, changing styles and then re-enabling the resize 
-        // event, well...crisis averted for a browser that doesn't deserve it.
+        // infinite loop each time a height value is changed. The infinite loop
+        // is avoided by first disabling the resize event, changing styles and 
+        // then re-enabling the resize event.
         //
         // @param {Boolean} flag
         //      Enables/disables resize event in IE8

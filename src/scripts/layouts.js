@@ -1,6 +1,8 @@
 /* global win, layout, getLayouts */
 
 //
+// @module
+//
 // A pass through module that iterates through a collection of layouts calling 
 // matching methods in the layout module
 //
@@ -8,6 +10,8 @@
 var layouts = (function () {
     'use strict';
     
+    //
+    // @private
     //
     // A generic delegation function that iterates through a NodeList calling
     // {fn} for each item in {eles} with node as its argument
@@ -28,6 +32,7 @@ var layouts = (function () {
             fn(eles[i]);
         }
     };
+    
     
     return {
         initialize: function (eles) {
