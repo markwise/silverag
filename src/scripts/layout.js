@@ -3,7 +3,7 @@ win,
 doc,
 supportsMediaQueries,
 attr,
-mediaMatch,
+matchMedia,
 generateAgId,
 keyStore,
 styleSheet
@@ -174,7 +174,7 @@ var layout = (function () {
 	var respond = function (ele, maxWidth) {
 		var media = 'screen and (max-width:' + maxWidth + 'px)';
 
-		if (mediaMatch(media).matches) {
+		if (matchMedia(media).matches) {
 			removeModifiers(ele);
 		} else {
 			applyModifiers(ele);

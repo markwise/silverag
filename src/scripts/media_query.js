@@ -1,7 +1,7 @@
 /* global
 doc,
 layouts,
-mediaMatch
+matchMedia
 */
 
 //requires: supports_media_queries
@@ -29,7 +29,7 @@ var mediaQuery = (function () {
     
     var maxWidth = function (width) {
         var media = 'screen and (max-width:' + width + 'px)';
-        mediaMatch(media).addListener(maxWidthChange);
+        matchMedia(media).addListener(maxWidthChange);
     };
     
     

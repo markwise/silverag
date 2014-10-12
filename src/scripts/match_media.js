@@ -3,12 +3,11 @@ win,
 supportsMediaQueries
 */
 
-//requires: supports_media_queries
+//matchMedia polyfill for IE9, SA5, iOS4.2
 
-var mediaMatch = win.matchMedia || (function () {
+//jshint -W079
+var matchMedia = win.matchMedia || (function () {
     'use strict';
-    
-    //matchMedia polyfill for IE9, SA5, iOS4.2
     
     if (!supportsMediaQueries) {
         return;
