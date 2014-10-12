@@ -10,7 +10,7 @@ var resize = (function () {
     'use strict';
 
     var wait,
-        delay = 0,
+        delay = 10,
         tasks = [],
         noresize;
     
@@ -74,5 +74,3 @@ var resize = (function () {
         }
     };
 }());
-
-resize.addTask(layouts.resizeMinHeight);

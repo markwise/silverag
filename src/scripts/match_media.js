@@ -1,7 +1,4 @@
-/* global
-win, 
-supportsMediaQueries
-*/
+/* global win, supportsMediaQueries, resize */
 
 //matchMedia polyfill for IE9, SA5, iOS4.2
 
@@ -9,48 +6,63 @@ supportsMediaQueries
 var matchMedia = win.matchMedia || (function () {
     'use strict';
     
+    //Exclude IE8
     if (!supportsMediaQueries) {
         return;
     }
     
-    var listeners = [],
+    var mediaQueryList = [],
         wait;
     
     
-    var addListener = function (fn) {
-        this.fn = fn;
-        listeners.push(this);
-    };
+    //
+    // @private
+    //
+    // Iterate through each mediaQueryList object checking for a match
+    // 
     
+    var checkMedia = function () {
+        wait || (wait = setTimeout(function () {
+            var i = mediaQueryList.length,
+                item,
+                matches;
     
-    var resize = function () {
-        wait = true;
-    
-        var i = listeners.length,
-            item,
-            matches;
-    
-        while (i--) {
-            item = listeners[i];
-            matches = win.styleMedia.matchMedium(item.media);
+            while (i--) {
+                item = mediaQueryList[i];
+                matches = win.styleMedia.matchMedium(item.media);
             
-            if (item.matches !== matches) {
-                item.matches = matches;
+                if (item.matches !== matches) {
+                    item.matches = matches;
                 
-                //Call listener
-                if (item.fn) {
-                    item.fn(item);
+                    //Call listener
+                    if (item.fn) {
+                        item.fn(item);
+                    }
                 }
             }
-        }
-        
-        wait = false;
+            
+            wait = void 0;
+        }));
+    };
+
+    
+    //
+    // @public
+    //
+    // Registers a listener with the calling mediaQueryList object
+    //        
+    // @param {Function} fn
+    //		Callback function to invoke if media is a match
+    //
+    
+    var addListener = function (fn) {
+        this.fn = fn;
+        mediaQueryList.push(this);
     };
     
     
-    win.addEventListener('resize', function () {
-        wait || resize();
-    });
+    //Register a window resize task        
+    resize.addTask(checkMedia);
 
 
     return function (media) {
