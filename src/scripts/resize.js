@@ -10,7 +10,7 @@ var resize = (function () {
     'use strict';
 
     var wait,
-        delay = 10,
+        delay = 0,
         tasks = [],
         noresize;
     
