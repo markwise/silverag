@@ -52,7 +52,7 @@ var matchMedia = win.matchMedia || (function () {
     // Registers a listener with the calling mediaQueryList object
     //        
     // @param {Function} fn
-    //		Callback function to invoke if media is a match
+    //      Callback function to invoke if media is a match
     //
     
     var addListener = function (fn) {
