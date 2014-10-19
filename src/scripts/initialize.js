@@ -36,21 +36,30 @@ var initialize = (function () {
     
     
     domReady.addTask(function () {
+        
+        //Stop timer to prevent further recursion
         clearTimeout(timer);
-        //In case layouts were missed
+        
+        //One final attempt to initialize layouts that may have been missed
+        //during the documents interactive state
         layouts.initialize();
-        //Add a window resize task
+        
+        //Add a window resize task to maintain equal heights
         resize.addTask(layouts.resizeMinHeight);
+        
         //Clean up initialize module
         timer = init = initialize = null;
     });
-
+    
 
     domReady.addTask(function () {
+        
+        //Exclude IE8
         if (!supportsMediaQueries) {
             return;
         }
 
+        //Initialize JavaScript media queries using the matchMedia API
         for (var i = 480; i <= 960; i += 20) {
             mediaQuery.maxWidth(i);
         }
