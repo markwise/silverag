@@ -4,57 +4,55 @@ supportsMediaQueries,
 mediaQuery,
 layouts,
 getLayouts,
-domReady
+domReady,
+resize
 */
 
-//requires: supports_media_queries
-//requires: attr_list
-//requires: layout
-//requires: layouts
-//requires: media_match
-//requires: media_query
+//
+// @module
+//
 
 var initialize = (function () {
     'use strict';
 
-    var timer,
-        wait = false;
+    var timer;
     
-    var initializeMediaQueries = function () {
-        if (!supportsMediaQueries) {
-            return;
-        }
+    //
+    // @private
+    //
+    // Recursively trys to initialize layouts until the DOM is ready. This
+    // provides fast initialization that checks elements as they become 
+    // available instead of waiting for all elements to be ready.
+    //
     
-        for (var i = 480; i <= 960; i += 20) {
-            mediaQuery.maxWidth(i);
-        }
+    var init = function () {
+        timer = setTimeout(function () {
+            layouts.initialize();
+            init();
+        });
     };
     
-    
-    var initializeLayouts = function () {
-        wait = true;
-        layouts.initialize(getLayouts());
-        wait = false;
-    };
-    
-    
-    timer = setInterval(function () {
-        wait || initializeLayouts();
-    });
+    init();
     
     
     domReady.addTask(function () {
-        setTimeout(function () {
-            clearInterval(timer);
-            //One final attempt
-            initializeLayouts();
-            initializeMediaQueries();
-            
-            //Clean up
-            timer =
-            wait =
-            initializeLayouts =
-            initializeMediaQueries = null;
-        });
+        clearTimeout(timer);
+        //In case layouts were missed
+        layouts.initialize();
+        //Add a window resize task
+        resize.addTask(layouts.resizeMinHeight);
+        //Clean up initialize module
+        timer = init = initialize = null;
+    });
+
+
+    domReady.addTask(function () {
+        if (!supportsMediaQueries) {
+            return;
+        }
+
+        for (var i = 480; i <= 960; i += 20) {
+            mediaQuery.maxWidth(i);
+        }
     });
 }());
