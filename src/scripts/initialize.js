@@ -4,7 +4,7 @@ supportsMediaQueries,
 mediaQuery,
 layouts,
 getLayouts,
-contentLoaded
+domReady
 */
 
 //requires: supports_media_queries
@@ -43,7 +43,7 @@ var initialize = (function () {
     });
     
     
-    contentLoaded(win, function () {
+    domReady.addTask(function () {
         setTimeout(function () {
             clearInterval(timer);
             //One final attempt

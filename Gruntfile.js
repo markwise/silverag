@@ -41,7 +41,7 @@ module.exports = function (grunt) {
                     'src/scripts/resize.js',
                     'src/scripts/match_media.js',
                     'src/scripts/media_query.js',
-                    'src/scripts/content_loaded.js',
+                    'src/scripts/dom_ready.js',
                     'src/scripts/initialize.js'
                 ],
                 dest: '.tmp/concat.js'
