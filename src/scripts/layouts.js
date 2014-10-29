@@ -45,10 +45,6 @@ var layouts = (function () {
         
         applyModifiers: function (eles) {
             delegate(layout.applyModifiers, eles);
-        },
-        
-        resizeMinHeight: function () {
-            delegate(layout.resizeMinHeight);
         }
     };
 }());

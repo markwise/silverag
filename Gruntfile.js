@@ -30,20 +30,14 @@ module.exports = function (grunt) {
                     }
                 },
                 src: [
-                    'src/scripts/supports_media_queries.js',
-                    'src/scripts/events.js',
                     'src/scripts/attr_list.js',
                     'src/scripts/generate_agid.js',
                     'src/scripts/key_store.js',
-                    'src/scripts/style_sheet.js',
                     'src/scripts/get_layouts.js',
                     'src/scripts/layout.js',
                     'src/scripts/layouts.js',
-                    'src/scripts/watcher.js',
-                    'src/scripts/resize.js',
-                    'src/scripts/match_media.js',
                     'src/scripts/media_query.js',
-                    'src/scripts/dom_ready.js',
+                    //'src/scripts/dom_ready.js',
                     'src/scripts/initialize.js'
                 ],
                 dest: '.tmp/concat.js'
@@ -63,6 +57,14 @@ module.exports = function (grunt) {
                     'src/scripts/footer.js'
                 ],
                 dest: 'build/<%= pkg.name %>.js'
+            },
+            
+            styles: {
+                options: {
+                    banner: '@charset \'utf-8\';\n\n<%= banners.build %>\n\n'
+                },
+                src: ['src/styles/silverag.css'],
+                dest: 'build/<%= pkg.name %>.css'
             }
         },
     
@@ -118,6 +120,7 @@ module.exports = function (grunt) {
             }
         },
        
+        /*
         sass: {
             build: {
                 options: {
@@ -133,16 +136,18 @@ module.exports = function (grunt) {
                 ]
             }
         },
+        */
         
         watch: {
             scripts: {
                 files: 'src/scripts/**/*.js',
                 tasks: ['build:scripts']
-            },
-            styles: {
-                files: 'src/styles/**/*.scss',
-                tasks: ['build:styles']
             }
+            //styles: {
+                //files: 'src/styles/**/*.scss',
+                //tasks: ['build:styles']
+            //}
+            
         },
         
         jshint: {
@@ -277,7 +282,9 @@ module.exports = function (grunt) {
         'clean:styles',
         
         //Compile sass files and move to build directory
-        'sass'
+        //'sass'
+        
+        'concat:styles'
     ]);
     
     grunt.registerTask('build', [

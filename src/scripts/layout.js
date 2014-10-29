@@ -21,49 +21,6 @@ var layout = (function () {
     //
     // @private
     //
-    // Returns the largest offsetHeight value of all visible elements
-    //
-    // @param {HTMLElement} ele
-    //      An ag element
-    //
-    // @returns {String}
-    //      The min-height value with a px unit
-    //
-
-    var getMinHeightIE8 = function (ele) {
-        var a = [];
-
-        forEachVisibleElement(ele, function (node) {
-            a.push(node.offsetHeight);
-        });
-
-        return Math.max.apply(null, a) + 'px';
-    };
-
-
-    //
-    // @private
-    //
-    // Returns the height of an ag element that will be used as the min-height
-    // value for all ag-cel and ag-line elements
-    //
-    // @param {HTMLElement} ele
-    //      An ag element
-    //
-    // @returns {String}
-    //      The min-height value with a px unit
-    //
-
-    var getMinHeight = function (ele) {
-        var style = win.getComputedStyle;
-
-        return style ? style(ele, null).height : getMinHeightIE8(ele);
-    };
-
-
-    //
-    // @private
-    //
     // Creates and returns an ag-line element
     //
     // @params {Number} index
@@ -103,30 +60,15 @@ var layout = (function () {
     //      Callback function that will be passed the current element in the
     //      iteration and a index value
     //
-
+    
     var forEachElement = function (ele, fn) {
         var node = ele.firstElementChild,
             index = 1;
 
-        if (node) {
-            while (node) {
-                fn(node, index);
-                node = node.nextElementSibling;
-                index += 1;
-            }
-
-        //IE8
-        } else {
-            node = ele.firstChild;
-
-            while (node) {
-                if (node.canHaveChildren) {
-                    fn(node, index);
-                    index += 1;
-                }
-
-                node = node.nextSibling;
-            }
+        while (node) {
+            fn(node, index);
+            node = node.nextElementSibling;
+            index += 1;
         }
     };
 
@@ -313,42 +255,6 @@ var layout = (function () {
     //
     // @public
     //
-    // Sets the min-height for all ag-cel and ag-line elements. If the align
-    // modifier exists, only ag-line elements get a min-height value set.
-    //
-    // @param {HTMLElement} ele
-    //      An ag element
-    //
-
-    var resizeMinHeight = function (ele) {
-        var agid = ele.agid,
-            store = keyStore.get(agid),
-            styles;
-
-        //Sets the min-height value to 0 for all ag-cel and ag-line elements
-        //while a new min-height value is being calculated
-        attr('ag-reflow', ele).set();
-
-        styles = [
-            '[ag-id="', agid, '"] > [ag-line] {\n',
-                //jshint -W015
-                '\tmin-height: ', getMinHeight(ele), ';\n',
-            '}'
-        ].join('');
-
-        //Only include ag-cel elements if the align modifier is not present
-        if (!store.hasAlignModifier) {
-            styles = ['[ag-id="', agid, '"] > [ag-cel],\n', styles].join('');
-        }
-
-        styleSheet.set(agid, styles);
-        attr('ag-reflow', ele).remove();
-    };
-
-
-    //
-    // @public
-    //
     // Restores the ag directive and stored modifiers back to a layout
     //
     // @param {HTMLElement} ele
@@ -382,7 +288,6 @@ var layout = (function () {
         attr('class', ele).remove('ag-not-responding');
         attr('class', ele).add('ag-responding');
         attr('ag', ele).remove();
-        styleSheet.clear(agid);
     };
 
 
@@ -416,9 +321,6 @@ var layout = (function () {
         store.hasFlipModifier = hasFlipModifier(modifiers);
         store.maxWidth = maxWidth = attr('ag-res', ele).get();
         
-        //Create a layout stylesheet
-        styleSheet.create(agid);
-        
         //Remove all whitespace nodes from a layout 
         removeWhitespace(ele);
         
@@ -426,26 +328,19 @@ var layout = (function () {
         //visible with the lines directive
         createLines(ele);
         
-        //Not IE8 and a max-width value is defined with the ag-res directive
-        if (supportsMediaQueries && maxWidth) {
+        //A max-width value is defined with the ag-res directive
+        if (maxWidth) {
             respond(ele, maxWidth);
         }
         
-        //Initialize the height of ag-line and ag-cel elements if a layout
-        //is not responding
-        if (!store.responding) {
-            resizeMinHeight(ele);
-        }
-        
         //The layout is ready to be made visible
-        attr('ag-ready', ele).set();
+        attr('class', ele).add('ag-ready');
     };
 
 
     return {
         initialize: initialize,
         removeModifiers: removeModifiers,
-        applyModifiers: applyModifiers,
-        resizeMinHeight: resizeMinHeight
+        applyModifiers: applyModifiers
     };
 }());

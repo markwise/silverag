@@ -12,8 +12,6 @@ resize
 //
 
 var styleSheet = (function () {
-    'use strict';
-
     return {
     
         //
@@ -65,22 +63,7 @@ var styleSheet = (function () {
         set: function (agid, styles) {
             var style = styleSheet.get(agid);
 
-            if (supportsMediaQueries) {
-                style.innerHTML = styles;
-            
-            //IE8
-            } else {
-                //Needed to prevent an endless loop when height values are 
-                //changed. See method comments for details
-                resize.preventResizeIE8(true);
-                
-                style.styleSheet.cssText = styles;
-                
-                //Need a small delay for styles to be registered
-                setTimeout(function () {
-                    resize.preventResizeIE8(false);
-                }, 10);
-            }
+            style.innerHTML = styles;
         },
         
         
