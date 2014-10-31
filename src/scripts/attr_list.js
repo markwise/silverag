@@ -144,7 +144,7 @@ var attr = (function () {
     //
     
     var set = function (val) {
-        ele.setAttribute(attr, (val || '').trim());
+        ele.setAttribute(attr, val || '');
     };
     
     
