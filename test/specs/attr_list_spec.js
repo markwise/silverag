@@ -1,9 +1,8 @@
 /* global attr */
 
-describe('attr', function () {
+describe('attrList', function () {
 
-    var $ele;
-    var ele;
+    var $ele, ele;
 
     beforeEach(function () {
         setFixtures('<div id="test"></div>');
@@ -17,18 +16,18 @@ describe('attr', function () {
     });
 
 
-    //Core attr object
+    //Core attrList object
     
     it('should return an attrList object', function () {
         expect(attr()).toEqual(jasmine.any(Object));
     });
     
-    it('should have method set', function () {
-        expect(attr().set).toEqual(jasmine.any(Function));
-    });
-    
     it('should have method get', function () {
         expect(attr().get).toEqual(jasmine.any(Function));
+    });
+    
+    it('should have method set', function () {
+        expect(attr().set).toEqual(jasmine.any(Function));
     });
     
     it('should have method has', function () {
@@ -46,21 +45,21 @@ describe('attr', function () {
     
     //Set method
     
-    describe('attr.set', function () {
+    describe('attrList.set', function () {
         
-        it('should set attribute', function () {
+        it('should set an attribute', function () {
             expect($ele).not.toHaveAttr('ag');
             attr('ag', ele).set();
             expect($ele).toHaveAttr('ag');
         });
     
-        it('should set attribute value', function () {
+        it('should set an attribute\'s value', function () {
             expect($ele).not.toHaveAttr('ag', 'split:1/2');
             attr('ag', ele).set('split:1/2');
             expect($ele).toHaveAttr('ag', 'split:1/2');
         });
     
-        it('should overwrite attribute value', function () {
+        it('should overwrite an attribute\'s value', function () {
             attr('ag', ele).set('split:1/2 space:5');
             expect(ele).toHaveAttr('ag', 'split:1/2 space:5');
             
@@ -68,7 +67,7 @@ describe('attr', function () {
             expect(ele).toHaveAttr('ag', 'split:3/2 space:1');
         });
     
-        it('should clear attribute value', function () {
+        it('should clear an attribute\'s value', function () {
             attr('ag', ele).set('split:1/2 space:5');
             expect(ele).toHaveAttr('ag', 'split:1/2 space:5');
             
@@ -80,80 +79,61 @@ describe('attr', function () {
     
     //Get method
     
-    describe('attr.get', function () {
-    
-        it('should get attribute value as string', function () {
-            expect(attr('ag', ele).get()).toEqual(jasmine.any(String));
-        });
+    describe('attrList.get', function () {
         
         it('should return an empty string', function () {
             attr('ag', ele).set();
             expect(attr('ag', ele).get()).toBe('');
         });
         
-        it('should return a string value', function () {
+        it('should return an attribute\'s value', function () {
             attr('ag', ele).set('split:1/2 space:5');
             expect(attr('ag', ele).get()).toBe('split:1/2 space:5');
-        });
-        
-        it('should get attribute value as array', function () {
-            expect(attr('ag', ele).get(true)).toEqual(jasmine.any(Array));
-        });
-        
-        it('should return an empty array', function () {
-            expect(attr('ag', ele).get(true).length).toBe(0);
-        });
-        
-        it('should return an array of values', function () {
-            attr('ag', ele).set('split:1/2 space:5');
-            expect(attr('ag', ele).get(true).length).toBe(2);
         });
     });
     
     
     //Has method
     
-    describe('attr.has', function () {
+    describe('attrList.has', function () {
         
-        it('should return true if attribute exists', function () {
+        it('should return true if the attribute exists', function () {
             attr('ag', ele).set();
             expect(attr('ag', ele).has()).toBe(true);
-            expect(attr('ag', ele).has('')).toBe(true);
-            expect(attr('ag', ele).has(' ')).toBe(true);
         });
         
-        it('should return true if the attribute values exist', function () {
+        it('should return true if the attribute value exists', function () {
             attr('ag', ele).set('split:1/2 space:1 align:b flip');
             expect(attr('ag', ele).has('split:1/2')).toBe(true);
-            expect(attr('ag', ele).has('flip space:1')).toBe(true);
-            expect(attr('ag', ele).has('align:b space:1 split:1/2')).toBe(true);
-            expect(attr('ag', ele).has('align:b flip space:1 split:1/2')).toBe(true);
+            expect(attr('ag', ele).has('space:1')).toBe(true);
+            expect(attr('ag', ele).has('align:b')).toBe(true);
+            expect(attr('ag', ele).has('flip')).toBe(true);
         });
         
         it('should return false if the attribute does not exist', function () {
             expect(attr('ag', ele).has()).toBe(false);
         });
         
-        it('should return false if the attribute values do not exist', function () {
+        it('should return false if the attribute value does not exist', function () {
             attr('ag', ele).set('split:1/2 align:b');
-            expect(attr('ag', ele).has('space:3')).toBe(false);
-            expect(attr('ag', ele).has('split:1/2 space:3')).toBe(false);
-            expect(attr('ag', ele).has('split:1/2 align:b space:3')).toBe(false);
+            expect(attr('ag', ele).has('split:3/2')).toBe(false);
+            expect(attr('ag', ele).has('align:m')).toBe(false);
+            expect(attr('ag', ele).has('space:1')).toBe(false);
         });
     });
     
     
     //Add method
     
-    describe('attr.add', function () {
+    describe('attrList.add', function () {
     
-        it('should add attribute', function () {
+        it('should add an attribute', function () {
             expect($ele).not.toHaveAttr('ag');
             attr('ag', ele).add();
             expect($ele).toHaveAttr('ag');
         });
         
-        it('should add a single attribute value', function () {
+        it('should append a string to an attribute\'s value', function () {
             attr('ag', ele).add('split:1/2');
             expect($ele).toHaveAttr('ag', 'split:1/2');
             
@@ -167,23 +147,10 @@ describe('attr', function () {
             expect($ele).toHaveAttr('ag', 'split:1/2 space:1 align:b flip');
         });
         
-        it('should add multiple attribute values', function () {
-            var attrList;
-            attr('ag', ele).add('split:3/1 space:2');
-            attrList = attr('ag', ele).get(true);
-            expect(attrList).toContain('split:3/1');
-            expect(attrList).toContain('space:2');
-           
-            attr('ag', ele).add('align:t flip');
-            attrList = attr('ag', ele).get(true);
-            expect(attrList).toContain('align:t');
-            expect(attrList).toContain('flip');
-        });
-        
-        it('should only add an attribute once', function () {
+        it('should append a string to an attribute\'s value once', function () {
             attr('ag', ele).add('split:1/2');
             attr('ag', ele).add('split:1/2');
-            attr('ag', ele).add('split:1/2 split:1/2');
+            attr('ag', ele).add('split:1/2');
             expect($ele).toHaveAttr('ag', 'split:1/2');
         });
     });
@@ -191,15 +158,17 @@ describe('attr', function () {
     
     //Remove method
     
-    describe('attr.remove', function () {
+    describe('attrList.remove', function () {
         
-        it('should remove attribute', function () {
-            attr('ag', ele).set('split:3/2 align:b flip');
+        it('should remove an attribute', function () {
+            attr('ag', ele).set();
+            expect($ele).toHaveAttr('ag', '');
+            
             attr('ag', ele).remove();
             expect($ele).not.toHaveAttr('ag');
         });
         
-        it('should remove a single attribute value', function () {
+        it('should remove a string from an attribute\'s value', function () {
             attr('ag', ele).set('split:3/2 align:b flip');
             expect($ele).toHaveAttr('ag', 'split:3/2 align:b flip');
             
@@ -210,17 +179,6 @@ describe('attr', function () {
             expect($ele).toHaveAttr('ag', 'flip');
             
             attr('ag', ele).remove('flip');
-            expect($ele).toHaveAttr('ag', '');
-        });
-        
-        it('should remove multiple attribute values', function () {
-            attr('ag', ele).set('split:3/2 space:5 align:m flip');
-            expect($ele).toHaveAttr('ag', 'split:3/2 space:5 align:m flip');
-            
-            attr('ag', ele).remove('align:m split:3/2 hello world');
-            expect($ele).toHaveAttr('ag', 'space:5 flip');
-            
-            attr('ag', ele).remove('space:5 flip');
             expect($ele).toHaveAttr('ag', '');
         });
     });
