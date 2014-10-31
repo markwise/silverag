@@ -1,5 +1,3 @@
-/* global attr */
-
 //
 // @module
 //
@@ -22,12 +20,8 @@ var generateAgId = (function () {
     //
     
     return function (ele) {
-        //jshint -W058, -W007
-        var agid = ele.agid || (ele.agid = +new Date + ++index);
-        
-        attr('ag-id', ele).set(agid);
-        
-        return agid;
+        //jshint -W093
+        return ele.agid = new Date().getTime() + (index += 1);
     };
 }());
     
