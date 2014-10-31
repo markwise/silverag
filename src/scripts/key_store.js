@@ -21,7 +21,8 @@ var keyStore = (function () {
         //
         
         create: function (agid) {
-            return (store[agid] = {});
+            //jshint -W093
+            return store[agid] = {};
         },
         
         
