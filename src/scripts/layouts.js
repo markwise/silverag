@@ -1,4 +1,4 @@
-/* global win, layout, getLayouts */
+/* global layout, getLayouts */
 
 //
 // @module
