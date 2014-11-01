@@ -3,7 +3,10 @@
 //
 // @module
 //
-// Registers media queries using the matchMedia API
+// Registers media queries using the matchMedia API. This is used in favor of
+// media queries written in CSS because it's less verbose. Otherwise, a media
+// query would have to be written for each max-width value that repeats the same
+// style rules bloating the file size.
 //
 
 var mediaQuery = (function () {
