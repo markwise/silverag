@@ -1,18 +1,12 @@
-/* global
-win,
-supportsMediaQueries,
-mediaQuery,
-layouts,
-getLayouts,
-domReady,
-resize
-*/
+/* global doc, mediaQuery, layouts, getLayouts */
 
 //
-// @module
+// @Closure
+//
+// Initializes silverag
 //
 
-var initialize = (function () {
+(function () {
     'use strict';
 
     var timer;
@@ -35,23 +29,28 @@ var initialize = (function () {
     init();
     
     
-    doc.addEventListener('DOMContentLoaded', function () {
+    //
+    // @private
+    //
+    // DOMContentLoaded listener
+    //
+    
+    var domReady = function () {
         //Stop timer to prevent further recursion
         clearTimeout(timer);
         
         //One final attempt to initialize layouts that may have been missed
-        //during the documents interactive state
         layouts.initialize();
         
-        //Clean up initialize module
-        timer = init = initialize = null;
-    });
-    
-    
-    doc.addEventListener('DOMContentLoaded', function () {
-        //Initialize JavaScript media queries using the matchMedia API
+        //Initialize media queries using the matchMedia API
         for (var i = 480; i <= 960; i += 20) {
             mediaQuery.maxWidth(i);
         }
-    });
+        
+        //Clean up
+        doc.removeEventListener('DOMContentLoaded', domReady);
+        timer = init = null;
+    };
+    
+    doc.addEventListener('DOMContentLoaded', domReady);
 }());
