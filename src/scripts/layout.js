@@ -178,8 +178,8 @@ var layout = (function () {
     //
 
     var initialize = function (ele) {
-		
-		//Make sure we only initialize a layout once
+        
+        //Make sure we only initialize a layout once
         if (ele.agid !== void 0) {
             return;
         }
