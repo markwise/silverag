@@ -1,116 +1,23 @@
-/* global
-win,
-doc,
-supportsMediaQueries,
-attr,
-matchMedia,
-generateAgId,
-keyStore,
-styleSheet
-*/
+/* global doc, attr, matchMedia, generateAgId, keyStore */
 
 //
 // @module
 //
-// Handles all operations related to an ag layout element
-//
 
 var layout = (function () {
     'use strict';
-    
-    //
-    // @private
-    //
-    // Creates and returns an ag-line element
-    //
-    // @params {Number} index
-    //      The index of the line in relation to other lines in a layout. This
-    //      index is used as a styling hook to show and hide ag-line elements.
-    //
-    // @returns {HTMLElement}
-    //      An ag-line element
-    //
-
-    var createLine = function (index) {
-        var fragment = doc.createDocumentFragment(),
-            line = doc.createElement('div');
-
-        attr('ag-line', line).set(index);
-        //Safari requires a tab character
-        fragment.appendChild(doc.createTextNode('\u0009'));
-        fragment.appendChild(line);
-        fragment.appendChild(doc.createTextNode('\u0009'));
-
-        return fragment;
-    };
-
 
     //
     // @private
     //
-    // Iterates over all child element nodes in {ele} calling {fn} for each
-    // child element. When {fn} is called, it will be passed the current
-    // element in the iteration and a index value. The index starts at 1 and
-    // is the order in relation to other siblings not the DOM index value.
-    //
-    // @param {HTMLElement} ele
-    //      An ag element
-    //
-    // @param {Function} fn
-    //      Callback function that will be passed the current element in the
-    //      iteration and a index value
-    //
-    
-    var forEachElement = function (ele, fn) {
-        var node = ele.firstElementChild,
-            index = 1;
-
-        while (node) {
-            fn(node, index);
-            node = node.nextElementSibling;
-            index += 1;
-        }
-    };
-
-
-    //
-    // @private
-    //
-    // A pass through call to forEachElement to filter visible elements. This
-    // will exclude ag-cel elements that have the modifer show, which sets
-    // an element's display to none.
-    //
-    // @param {HTMLElement} ele
-    //      An ag element
-    //
-    // @param {Function} fn
-    //      Callback function that will be passed the current element in the
-    //      iteration and a index value
-    //
-
-    var forEachVisibleElement = function (ele, fn) {
-        var index = 1;
-
-        forEachElement(ele, function (node) {
-            if (!attr('ag-cel', node).has('show')) {
-                fn(node, index);
-                index += 1;
-            }
-        });
-    };
-
-
-    //
-    // @private
-    //
-    // Respond gets called once during initialization if a layout has a 
-    // max-width value defined with an ag-res directive
+    // Respond gets called one-time during layout initialization if a max-width
+    // value is defined with the ag-res label.
     //
     // @param {HTMLElement} ele
     //      An ag element
     //
     // @param {String} maxWidth
-    //      The max-width value use to match against
+    //      The max-width value used to match against
     //
 
     var respond = function (ele, maxWidth) {
@@ -122,36 +29,76 @@ var layout = (function () {
             applyModifiers(ele);
         }
     };
-
+    
 
     //
     // @private
     //
-    // Creates ag-line elements
+    // Returns a filtered array of ag-cel elements without the show modifier
     //
     // @param {HTMLElement} ele
     //      An ag element
     //
-
-    var createLines = function (ele) {
-        forEachVisibleElement(ele, function (node, index) {
-            if (index > 1) {
-                ele.insertBefore(createLine(index - 1), node);
+    // @returns {Array}
+    //
+    
+    var getVisibleElements = function (ele) {
+        var node = ele.firstElementChild,
+            a = [];
+            
+        while (node) {
+            if (!attr('ag-cel', node).has('show')) {
+                a.push(node);
             }
-        });
+    
+            node = node.nextElementSibling;
+        }
+    
+        return a;
     };
-
-
+    
+    
     //
     // @private
     //
-    // As the name implies, all whitespace nodes are removed from an ag element
+    // Creates an ag-line element between visible elements. Visible elements
+    // are any ag-cel elements that don't have a show modifier, which is
+    // used to hide ag-cel elements in non-responsive layouts. 
+    //
+    // Each ag-line element is assigned an ordinal value in relation to 
+    // other ag-line elements. This ordinal value is used as an internal styling
+    // hook to show and hide ag-line elements.
+    //
+    // @param {HTMLElement} ele
+    //      An ag element
+    //
+    
+    var createAgLines = function (ele) {
+        var nodes = getVisibleElements(ele),
+            l = nodes.length,
+            i = 1,
+            agLine;
+        
+        for (; i < l; i++) {
+            agLine = doc.createElement('div');
+            attr('ag-line', agLine).set(i);
+            ele.insertBefore(agLine, nodes[i]);
+        }
+    };
+    
+    
+    //
+    // @private
+    //
+    // Removes non-element nodes from a layout. Although not required, it
+    // provides a clean base to work from by eliminating comments and extraneous
+    // whitespace nodes.
     //
     // @param {HTMLElement} ele
     //      An ag element
     //
 
-    var removeWhitespace = function (ele) {
+    var removeNonElements = function (ele) {
         var node = ele.firstChild,
             next;
 
@@ -168,94 +115,16 @@ var layout = (function () {
 
 
     //
-    // @private
-    //
-    // Does the ag directive contain a flip modifier
-    //
-    // @param {String} modifiers
-    //      An ag directives modifiers
-    //
-    // @returns {Boolen}
-    //      True or false if the modifier exists
-    //
-
-    var hasFlipModifier = function (modifiers) {
-        return /(?:^|\s+)flip(?:\s+|$)/.test(modifiers);
-    };
-
-
-    //
-    // @private
-    //
-    // Does the ag directive contain a lines modifier
-    //
-    // @param {String} modifiers
-    //      An ag directives modifiers
-    //
-    // @returns {Boolen}
-    //      True or false if the modifier exists
-    //
-
-    var hasLinesModifier = function (modifiers) {
-        return /(?:^|\s+)lines(?::(?:show|hide):\d)?(?:\s+|$)/.test(modifiers);
-    };
-
-
-    //
-    // @private
-    //
-    // Does the ag directive contain a align modifier
-    //
-    // @param {String} modifiers
-    //      An ag directives modifiers
-    //
-    // @returns {Boolen}
-    //      True or false if the modifier exists
-    //
-
-    var hasAlignModifier = function (modifiers) {
-        return /(?:^|\s+)align:[tmb](?:\s+|$)/.test(modifiers);
-    };
-
-
-    //
-    // @private
-    //
-    // Does the ag directive contain a space modifier
-    //
-    // @param {String} modifiers
-    //      An ag directives modifiers
-    //
-    // @returns {Boolen}
-    //      True or false if the modifier exists
-    //
-
-    var hasSpaceModifier = function (modifiers) {
-        return /(?:^|\s+)space:[12345](?:\s+|$)/.test(modifiers);
-    };
-
-
-    //
-    // @private
-    //
-    // Does the ag directive contain a split modifier
-    //
-    // @param {String} modifiers
-    //      An ag directives modifiers
-    //
-    // @returns {Boolen}
-    //      True or false if the modifier exists
-    //
-
-    var hasSplitModifier = function (modifiers) {
-        return /(?:^|\s+)split:(?:[2345]|[1]\/[23]|[23]\/1|2\/3|3\/2)(?:\s+|$)/.test(modifiers);
-    };
-
-
-    //
     // @public
     //
-    // Restores the ag directive and stored modifiers back to a layout
+    // Restores the ag label and it's modifiers to a layout.
+    //
+    // The class ag-not-responding is added to a layout providing a styling hook
+    // for authors. Likewise, if a layout is responding, the class ag-responding 
+    // is added to the layout.
+    //
+    // The methods applyModifiers and removeModifiers only apply to responsive
+    // layouts defined with an ag-res label.
     //
     // @param {HTMLElement} ele
     //      An ag element
@@ -274,15 +143,23 @@ var layout = (function () {
     //
     // @public
     //
-    // Removes the ag directive and all modifiers from a layout
+    // Removes the ag label and it's modifiers from a layout. Because all styles
+    // are tied to the attribute ag, removing it provides a clean style 
+    // definition to work from when a layout is responding :)
+    //
+    // The class ag-responding is added to the layout providing a styling hook 
+    // for authors. Likewise, if a layout is not responding, the class 
+    // ag-not-responding is added to the layout.
+    //
+    // The methods applyModifiers and removeModifiers only apply to responsive
+    // layouts defined with an ag-res label.
     //
     // @param {HTMLElement} ele
     //      An ag element
     //
 
     var removeModifiers = function (ele) {
-        var agid = ele.agid,
-            store = keyStore.get(agid);
+        var store = keyStore.get(ele.agid);
 
         store.responding = true;
         attr('class', ele).remove('ag-not-responding');
@@ -294,46 +171,30 @@ var layout = (function () {
     //
     // @public
     //
-    // The core layout initialization method. This is where all the good stuff
-    // happens
+    // The core layout initialization method
     //
     // @param {HTMLElement} ele
     //      An ag element
     //
 
     var initialize = function (ele) {
-
+		
+		//Make sure we only initialize a layout once
         if (ele.agid !== void 0) {
             return;
         }
-
-        var agid = generateAgId(ele),
-            store = keyStore.create(agid),
-            modifiers,
-            maxWidth;
         
-        //Cache layout data
-        store.modifiers = modifiers = attr('ag', ele).get();
-        store.hasSplitModifier = hasSplitModifier(modifiers);
-        store.hasSpaceModifier = hasSpaceModifier(modifiers);
-        store.hasAlignModifier = hasAlignModifier(modifiers);
-        store.hasLinesModifier = hasLinesModifier(modifiers);
-        store.hasFlipModifier = hasFlipModifier(modifiers);
-        store.maxWidth = maxWidth = attr('ag-res', ele).get();
+        var store = keyStore.create(generateAgId(ele)),
+            agRes = attr('ag-res', ele).get();
+         
+        store.modifiers = attr('ag', ele).get();
+        removeNonElements(ele);
+        createAgLines(ele);
         
-        //Remove all whitespace nodes from a layout 
-        removeWhitespace(ele);
-        
-        //Add lines that are used for vertical alignment and can be made
-        //visible with the lines directive
-        createLines(ele);
-        
-        //A max-width value is defined with the ag-res directive
-        if (maxWidth) {
-            respond(ele, maxWidth);
+        if (agRes) {
+            respond(ele, agRes);
         }
         
-        //The layout is ready to be made visible
         attr('class', ele).add('ag-ready');
     };
 
