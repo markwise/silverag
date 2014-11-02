@@ -1,4 +1,4 @@
-/* global doc, mediaQuery, layouts, getLayouts */
+/* global doc, mediaQuery, layouts, getLayouts, layoutObserver */
 
 //
 // @Closure
@@ -11,8 +11,6 @@
 
     var timer;
     
-    //
-    // @private
     //
     // Recursively trys to initialize layouts until the DOM is ready. This
     // provides fast initialization that checks elements as they become 
@@ -30,8 +28,6 @@
     
     
     //
-    // @private
-    //
     // DOMContentLoaded listener
     //
     
@@ -46,6 +42,9 @@
         for (var i = 480; i <= 960; i += 20) {
             mediaQuery.maxWidth(i);
         }
+        
+        //Initialize new layouts that have been added to the DOM
+        layoutObserver.create();
         
         //Clean up
         doc.removeEventListener('DOMContentLoaded', domReady);
