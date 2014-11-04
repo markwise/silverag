@@ -1,4 +1,4 @@
-/* global doc, layouts, matchMedia */
+/* global doc, layouts, matchMedia, getLayouts */
 
 //
 // @module
@@ -23,7 +23,7 @@ var mediaQuery = (function () {
     
     var maxWidthChange = function (mql) {
         var maxWidth = mql.media.match(/(\d+)/)[1],
-            eles = doc.querySelectorAll('[ag-res="' + maxWidth + '"]');
+            eles = getLayouts('[ag-res="' + maxWidth + '"]');
     
         if (eles.length) {
             if (mql.matches) {

@@ -1,4 +1,4 @@
-/* global doc, layouts, WebKitMutationObserver, MutationEvent */
+/* global doc, layouts, WebKitMutationObserver, MutationEvent, getLayouts */
 
 //
 // @module
@@ -18,7 +18,7 @@ var layoutObserver = (function () {
     //
     
     var observeAddedLayouts = function () {
-        layouts.initialize();
+        layouts.initialize(getLayouts('[ag]:not(.ag-ready)'));
     };
 
     
