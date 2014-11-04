@@ -34,17 +34,51 @@ var layouts = (function () {
     };
     
     
-    return {
-        initialize: function (eles) {
-            delegate(layout.initialize, eles);
-        },
+    //
+    // @public
+    //
+    // Initializes a list of layouts
+    //
+    // @param {NodeList} eles
+    //      An optional list of layouts to initialize
+    //
     
-        removeModifiers: function (eles) {
-            delegate(layout.removeModifiers, eles);
-        },
-        
-        applyModifiers: function (eles) {
-            delegate(layout.applyModifiers, eles);
-        }
+    var initialize = function (eles) {
+        delegate(layout.initialize, eles);
+    };
+    
+    
+    //
+    // @public
+    //
+    // Removes ag modifiers from a list of layouts
+    //
+    // @param {NodeList} eles
+    //      An optional list of layouts to remove ag modifiers from
+    //
+
+    var removeModifiers = function (eles) {
+        delegate(layout.removeModifiers, eles);
+    };
+    
+    
+    //
+    // @public
+    //
+    // Reapplies ag modifiers to a list of layouts
+    //
+    // @param {NodeList} eles
+    //      An optional list of layouts to reapply ag modifiers to
+    //
+    
+    var applyModifiers = function (eles) {
+        delegate(layout.applyModifiers, eles);
+    };
+    
+    
+    return {
+        initialize: initialize,
+        removeModifiers: removeModifiers,
+        applyModifiers: applyModifiers
     };
 }());
