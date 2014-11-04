@@ -173,6 +173,23 @@ var layout = (function () {
     //
     // The core layout initialization method
     //
+    // What does it mean for a layout to be initialized?
+    //
+    // 1. A UUID is created for a layout, which is used to create a 
+    //    key/value store
+    //
+    // 2. All non-element nodes are removed from a layout to provide a clean
+    //    base to work from
+    //
+    // 3. ag-line elements are injected into a layout, which are used to show
+    //    and hide dividing lines between columns
+    //
+    // 4. If a layout is responsive, meaning it has an ag-res label, the
+    //    max-width value of ag-res is used to match a media query defined 
+    //    using the matchMedia API to initialize a layout accordingly
+    //
+    // 5. The layout is made visible by adding the class ag-ready
+    //
     // @param {HTMLElement} ele
     //      An ag element
     //
