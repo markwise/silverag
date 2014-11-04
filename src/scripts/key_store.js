@@ -1,7 +1,7 @@
 //
 // @module
 //
-// Creates a key/value store for an ag layout
+// Manages a layout's key/value store
 //
 
 var keyStore = (function () {
@@ -9,37 +9,56 @@ var keyStore = (function () {
 
     var store = {};
 
-    return {
+    //
+    // @public
+    //
+    // Creates a new key/value store for a layout by {agid}
+    //
+    // @params {String} agid
+    //      The UUID associated with a layout
+    //
     
-        //
-        // @public
-        //
-        // Creates a new key/value store for a layout by {agid}
-        //
-        // @params {String} agid
-        //      The UUID associated with a layout
-        //
-        
-        create: function (agid) {
-            //jshint -W093
-            return store[agid] = {};
-        },
-        
-        
-        //
-        // @public
-        //
-        // Returns the key/value store associated with a layout by {agid}
-        //
-        // @params {String} agid
-        //      The UUID associated with a layout
-        //
-        // @returns {Object}
-        //      The key/value store
-        //
-        
-        get: function (agid) {
-            return store[agid];
-        }
+    var create = function (agid) {
+        //jshint -W093
+        return store[agid] = {};
+    };
+    
+    
+    //
+    // @public
+    //
+    // Removes a layouts key/value store from memory when a layout is removed
+    // from the DOM
+    //
+    // @params {String} agid
+    //      The UUID associated with a layout
+    //
+    
+    var remove = function (agid) {
+        store[agid] = null;
+    };
+    
+    
+    //
+    // @public
+    //
+    // Returns the key/value store associated with a layout by {agid}
+    //
+    // @params {String} agid
+    //      The UUID associated with a layout
+    //
+    // @returns {Object}
+    //      The key/value store
+    //
+    
+    var get = function (agid) {
+        return store[agid];
+    };
+
+
+    return {
+        create: create,
+        remove: remove,
+        get: get
     };
 }());
