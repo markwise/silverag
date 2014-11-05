@@ -11,9 +11,10 @@ keyStore
 //
 // @module
 //
-// Initializes new layouts that have been added to the DOM using
-// MutationObservers for supporting browsers and MutationEvents as a fallback
-// for IE10. See the MutationObserver and MutationEvents APIs for details.
+// Uses MutationObservers to observe when new elements have been added and
+// removed from the DOM. This allows layouts to be initialized and cleaned up
+// when they are created and destroyed. IE10 uses MutationEvents as a fallback.
+// See the MutationObserver and MutationEvents APIs for details.
 //
 
 var layoutObserver = (function () {
@@ -22,11 +23,9 @@ var layoutObserver = (function () {
     //
     // @private
     //
-    // Initializes new layouts that have been added to the DOM. ag-line
-    // elements are ignored because they get added to a layout during
-    // initialization, which is another mutation. Since ag-line elements are
-    // not layouts and contain no children, they are ignored to prevent an
-    // unnecessary call to layouts.initialize.
+    // Trys to initialize new layouts when an element has been added to the DOM
+    // unless the element is an ag-line. Since ag-line elements are not layouts
+    // and contain no children, they are ignored to prevent further action.
     //
             
     var addedNodesMutation = function (ele) {
@@ -39,8 +38,8 @@ var layoutObserver = (function () {
     //
     // @private
     //
-    // Sets the keyStore object to null for any layouts that are removed
-    // from the DOM
+    // Sets the keyStore object to null for any layouts that are removed from
+    // the DOM
     //      
     
     var removedNodesMutation = function (ele) {
@@ -115,9 +114,8 @@ var layoutObserver = (function () {
     //
     // @public
     //
-    // Creates a MutationObserver instance to start observing when new 
-    // elements have been added and removed from the DOM. IE10 uses 
-    // MutationEvents as a fallback.
+    // Creates a MutationObserver instance to observe when new elements have been 
+    // added and removed from the DOM. IE10 uses MutationEvents as a fallback.
     //
     
     var create = function () {
@@ -136,6 +134,9 @@ var layoutObserver = (function () {
             doc.body.addEventListener('DOMNodeInserted', mutationListener);
             doc.body.addEventListener('DOMNodeRemoved', mutationListener);
         }
+        
+        //Clean up
+        layoutObserver = create = null;
     };
 
 
