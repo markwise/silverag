@@ -37,7 +37,7 @@ module.exports = function (grunt) {
                     'src/scripts/layout.js',
                     'src/scripts/layouts.js',
                     'src/scripts/layout_observer.js',
-                    'src/scripts/media_query.js',
+                    'src/scripts/media_queries.js',
                     'src/scripts/initialize.js'
                 ],
                 dest: '.tmp/concat.js'

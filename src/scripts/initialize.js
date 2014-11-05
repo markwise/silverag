@@ -1,4 +1,4 @@
-/* global doc, mediaQuery, layouts, getLayouts, layoutObserver */
+/* global doc, mediaQueries, layouts, getLayouts, layoutObserver */
 
 //
 // @Closure
@@ -39,9 +39,7 @@
         layouts.initialize();
         
         //Initialize media queries using the matchMedia API
-        for (var i = 480; i <= 960; i += 20) {
-            mediaQuery.maxWidth(i);
-        }
+        mediaQueries.create();
         
         //Initialize new layouts that have been added to the DOM
         layoutObserver.create();

@@ -5,13 +5,13 @@
 //
 // Registers media queries using the matchMedia API. This is used in favor of
 // media queries written in CSS because it's less verbose. Otherwise, a media
-// query would have to be written for each max-width value that repeats the same
-// style rules bloating the file size.
+// query would have to be written for each max-width value we want a layout to
+// respond to. See the matchMedia API for details.
 //
 
-var mediaQuery = (function () {
+var mediaQueries = (function () {
     'use strict';
-    
+
     //
     // @private
     //
@@ -38,20 +38,24 @@ var mediaQuery = (function () {
     //
     // @public
     //
-    // Registers an event listener to be called when the max-width value of the
-    // screen changes. See the matchMedia API for more details.
-    //
-    // @param {Number|String} width
-    //      The max-width value to register a listener with
+    // Create media queries from 480 to 960 in increments of 20 that listen for
+    // changes in max-width
     //
     
-    var maxWidth = function (width) {
-        var media = 'screen and (max-width:' + width + 'px)';
-        matchMedia(media).addListener(maxWidthChange);
+    var create = function () {
+        var media, i;
+    
+        for (i = 480; i <= 960; i += 20) {
+            media = 'screen and (max-width:' + i + 'px)';
+            matchMedia(media).addListener(maxWidthChange);
+        }
+        
+        //Clean up
+        mediaQueries = create = null;
     };
     
     
     return {
-        maxWidth: maxWidth
+        create: create
     };
 }());
