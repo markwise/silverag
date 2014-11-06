@@ -191,10 +191,14 @@ module.exports = function (grunt) {
                 files: [
                     'test/vendor/jquery/dist/jquery.js',
                     'test/vendor/jasmine-jquery/lib/jasmine-jquery.js',
-                    'test/vendor/sinon/lib/sinon.js',
+                    //'test/vendor/sinon/lib/sinon.js',
                     'test/globals.js',
                     'src/scripts/attr_list.js',
-                    'test/specs/attr_list_spec.js'
+                    'src/scripts/key_store.js',
+                    'src/scripts/get_layouts.js',
+                    'src/scripts/generate_agid.js',
+                    'src/scripts/layout.js',
+                    'test/specs/**/*.js'
                 ],
                 //exclude: [
                     //'src/scripts/header.js',
@@ -206,9 +210,9 @@ module.exports = function (grunt) {
                 options: {
                     browsers: [
                         'PhantomJS',
-                        'Chrome',
                         'Safari',
-                        'Firefox'
+                        'Firefox',
+                        'Chrome'
                     ],
                     preprocessors: {
                         'src/scripts/**/*.js': 'coverage'

@@ -1,7 +1,6 @@
 /* global attr */
 
 describe('attrList', function () {
-
     var $ele, ele;
 
     beforeEach(function () {
@@ -11,8 +10,7 @@ describe('attrList', function () {
     });
 
     afterEach(function () {
-        $ele = null;
-        ele =  null;
+        $ele = ele = void 0;
     });
 
 
