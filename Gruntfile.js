@@ -58,7 +58,6 @@ module.exports = function (grunt) {
                 ],
                 dest: 'build/<%= pkg.name %>.js'
             },
-            
             styles: {
                 options: {
                     banner: '@charset \'utf-8\';\n\n<%= banners.build %>\n\n'
@@ -111,43 +110,11 @@ module.exports = function (grunt) {
                 options: {
                     banner: '@charset "utf-8";\n\n<%= banners.dist %>'
                 },
-                files: [
-                    {
-                        src: ['build/<%= pkg.name %>.css'],
-                        dest: '.tmp/<%= id %>/<%= pkg.name %>-<%= pkg.version %>.min.css'
-                    }
-                ]
+                files: [{
+                    src: ['build/<%= pkg.name %>.css'],
+                    dest: '.tmp/<%= id %>/<%= pkg.name %>-<%= pkg.version %>.min.css'
+                }]
             }
-        },
-       
-        /*
-        sass: {
-            build: {
-                options: {
-                    //banner: '@charset "utf-8";\n\n<%= banners.build %>\n',
-                    banner: '<%= banners.build %>\n',
-                    style: 'expanded'
-                },
-                files: [
-                    {
-                        src: ['src/styles/<%= pkg.name %>.scss'],
-                        dest: 'build/<%= pkg.name %>.css'
-                    }
-                ]
-            }
-        },
-        */
-        
-        watch: {
-            scripts: {
-                files: 'src/scripts/**/*.js',
-                tasks: ['build:scripts']
-            }
-            //styles: {
-                //files: 'src/styles/**/*.scss',
-                //tasks: ['build:styles']
-            //}
-            
         },
         
         jshint: {
@@ -191,7 +158,6 @@ module.exports = function (grunt) {
                 files: [
                     'test/vendor/jquery/dist/jquery.js',
                     'test/vendor/jasmine-jquery/lib/jasmine-jquery.js',
-                    //'test/vendor/sinon/lib/sinon.js',
                     'test/globals.js',
                     'src/scripts/attr_list.js',
                     'src/scripts/key_store.js',
@@ -200,19 +166,14 @@ module.exports = function (grunt) {
                     'src/scripts/layout.js',
                     'test/specs/**/*.js'
                 ],
-                //exclude: [
-                    //'src/scripts/header.js',
-                    //'src/scripts/footer.js'
-                //],
                 singleRun: true
             },
             unit: {
                 options: {
                     browsers: [
-                        'PhantomJS',
+                        'Chrome',
                         'Safari',
-                        'Firefox',
-                        'Chrome'
+                        'Firefox'
                     ],
                     preprocessors: {
                         'src/scripts/**/*.js': 'coverage'
@@ -242,22 +203,13 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-indent');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-zip');
     
     
     //Custom tasks
-    
-    grunt.registerTask('travis', [
-        'jshint',
-        'karma:ci'
-    ]);
-    
-    grunt.registerTask('work', ['watch']);
     
     grunt.registerTask('build:scripts', [
         
@@ -285,9 +237,7 @@ module.exports = function (grunt) {
         //Remove existing build styles
         'clean:styles',
         
-        //Compile sass files and move to build directory
-        //'sass'
-        
+        //Concatenate styles and move to build directory        
         'concat:styles'
     ]);
     
@@ -338,21 +288,18 @@ module.exports = function (grunt) {
     grunt.registerTask('default', function () {
         grunt.log.write([
             '\nSilver Ag grunt commands:\n\n',
-        
-            'grunt work\n',
-            '    watch scripts and styles for changes and build\n\n',
             
             'grunt build:scripts\n',
             '    concatenate scripts and move to build directory\n\n',
             
             'grunt build:styles\n',
-            '    compile sass files and move to build directory\n\n',
+            '    concatenate styles and move to build directory\n\n',
             
             'grunt build\n',
             '    build scripts and styles\n\n',
             
             'grunt test\n',
-            '    run automation tests\n\n',
+            '    run jshint and jasmine tests\n\n',
             
             'grunt release\n',
             '    run tests, build and minify scripts and styles, zip distribution\n',
