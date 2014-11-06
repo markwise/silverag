@@ -30,14 +30,14 @@ module.exports = function (grunt) {
                     }
                 },
                 src: [
-                    'src/scripts/attr_list.js',
-                    'src/scripts/generate_agid.js',
-                    'src/scripts/key_store.js',
-                    'src/scripts/get_layouts.js',
+                    'src/scripts/attrList.js',
+                    'src/scripts/generateAgId.js',
+                    'src/scripts/keyStore.js',
+                    'src/scripts/getLayouts.js',
                     'src/scripts/layout.js',
                     'src/scripts/layouts.js',
-                    'src/scripts/layout_observer.js',
-                    'src/scripts/media_queries.js',
+                    'src/scripts/layoutObserver.js',
+                    'src/scripts/mediaQueries.js',
                     'src/scripts/initialize.js'
                 ],
                 dest: '.tmp/concat.js'
@@ -159,10 +159,10 @@ module.exports = function (grunt) {
                     'test/vendor/jquery/dist/jquery.js',
                     'test/vendor/jasmine-jquery/lib/jasmine-jquery.js',
                     'test/globals.js',
-                    'src/scripts/attr_list.js',
-                    'src/scripts/key_store.js',
-                    'src/scripts/get_layouts.js',
-                    'src/scripts/generate_agid.js',
+                    'src/scripts/attrList.js',
+                    'src/scripts/keyStore.js',
+                    'src/scripts/getLayouts.js',
+                    'src/scripts/generateAgId.js',
                     'src/scripts/layout.js',
                     'test/specs/**/*.js'
                 ],
