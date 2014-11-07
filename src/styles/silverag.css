@@ -1,7 +1,9 @@
 /* ag */
 
 [ag] {
+    display: -ms-flexbox;
     display: flex;
+    -ms-flex-pack: justify;
     justify-content: space-between;
     visibility: hidden;
 }
@@ -133,14 +135,17 @@
 /* ag::align modifier */
  
 [ag~='align:t'] {
+    -ms-flex-align: start;
     align-items: flex-start;
 }
 
 [ag~='align:m'] {
+    -ms-flex-align: center;
     align-items: center;
 }
 
 [ag~='align:b'] {
+    -ms-flex-align: end;
     align-items: flex-end;
 }
 
@@ -149,6 +154,7 @@
 
 [ag-line] {
     display: none;
+    -ms-flex-item-align: stretch;
     align-self: stretch;
     width: 1px;
     background: #ccc;
@@ -170,6 +176,7 @@
 /* ag::flip modifier */
  
 [ag~='flip'] {
+    -ms-flex-direction: row-reverse;
     flex-direction: row-reverse;
 }
 

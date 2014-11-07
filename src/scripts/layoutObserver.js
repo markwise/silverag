@@ -1,12 +1,4 @@
-/* global 
-doc, 
-layouts, 
-WebKitMutationObserver, 
-MutationEvent, 
-getLayouts, 
-attr, 
-keyStore 
-*/
+/* global win, doc, layout, layouts, getLayouts, attr, keyStore */
 
 //
 // @module
@@ -23,33 +15,17 @@ var layoutObserver = (function () {
     //
     // @private
     //
-    // Trys to initialize new layouts when an element has been added to the DOM
-    // unless the element is an ag-line. Since ag-line elements are not layouts
-    // and contain no children, they are ignored to prevent further action.
-    //
-            
-    var addedNodesMutation = function (ele) {
-        if (!attr('ag-line', ele).has()) {
-            layouts.initialize(getLayouts('[ag]:not(.ag-ready)'));
-        }
-    };
-    
-    
-    //
-    // @private
-    //
-    // Sets the keyStore object to null for any layouts that are removed from
-    // the DOM
+    // Nullifies a removed layout's keyStore object
     //      
     
     var removedNodesMutation = function (ele) {
         
-        //Check ele
+        //Is ele a layout
         if (attr('class', ele).has('ag-ready')) {
             keyStore.remove(ele.agid);
         }
         
-        //Check ele's descendants
+        //Are any of ele's descendants a layout
         var eles = ele.querySelectorAll('.ag-ready'),
             i = eles.length;
         
@@ -67,46 +43,45 @@ var layoutObserver = (function () {
     
     var mutationCallback = function (records) {
         var i = records.length,
-            record,
-            addedNodes,
             removedNodes,
             j;
         
         while (i--) {
-            record = records[i];
-            addedNodes = record.addedNodes;
-            removedNodes = record.removedNodes;
+            removedNodes = records[i].removedNodes;
             j = removedNodes.length;
-            
-            //Have nodes been removed
-            if (j) {
-                while (j--) {
-                    removedNodesMutation(removedNodes[j]);
-                }
-            }
-            
-            //Have nodes been added
-            if (addedNodes.length) {
-                addedNodesMutation(addedNodes[0]);
+    
+            while (j--) {
+                removedNodesMutation(removedNodes[j]);
             }
         }
+        
+        //Try to initialize new layouts that have been added to the DOM
+        layouts.initialize(getLayouts('[ag]:not(.ag-ready)'));
     };
     
     
     //
     // @private
     //
-    // MutationEvent listener
+    // MutationEvent listener for IE10
     //
     
     var mutationListener = function (event) {
-        var type = event.type;
-    
+        var type = event.type,
+            target = event.target;
+        
+        //DOMNodeInserted is fired for parent nodes and their descendants that
+        //are added to the DOM
         if (type === 'DOMNodeInserted') {
-            addedNodesMutation(event.target);
+            if (attr('ag', target).has()) {
+                layout.initialize(target);
+            }
+        
+        //DOMNodeRemoved only fires for parent nodes that are removed from the
+        //DOM, but not their descendants unlike DOMNodeInserted
         } else
         if (type === 'DOMNodeRemoved') {
-            removedNodesMutation(event.target);
+            removedNodesMutation(target);
         }
     };
 
@@ -119,7 +94,7 @@ var layoutObserver = (function () {
     //
     
     var create = function () {
-        var mutationObserver = MutationObserver || WebKitMutationObserver;
+        var mutationObserver = win.MutationObserver || win.WebKitMutationObserver;
         
         if (mutationObserver) {
             //jshint -W055
@@ -130,7 +105,7 @@ var layoutObserver = (function () {
             
         //IE10
         } else
-        if (MutationEvent) {
+        if (win.MutationEvent) {
             doc.body.addEventListener('DOMNodeInserted', mutationListener);
             doc.body.addEventListener('DOMNodeRemoved', mutationListener);
         }
