@@ -101,11 +101,11 @@ describe('attrList', function () {
         });
         
         it('should return true if the attribute value exists', function () {
-            attr('ag', ele).set('split:1/2 space:1 align:b flip');
+            attr('ag', ele).set('split:1/2 space:1 align:e reverse');
             expect(attr('ag', ele).has('split:1/2')).toBe(true);
             expect(attr('ag', ele).has('space:1')).toBe(true);
-            expect(attr('ag', ele).has('align:b')).toBe(true);
-            expect(attr('ag', ele).has('flip')).toBe(true);
+            expect(attr('ag', ele).has('align:e')).toBe(true);
+            expect(attr('ag', ele).has('reverse')).toBe(true);
         });
         
         it('should return false if the attribute does not exist', function () {
@@ -113,9 +113,9 @@ describe('attrList', function () {
         });
         
         it('should return false if the attribute value does not exist', function () {
-            attr('ag', ele).set('split:1/2 align:b');
+            attr('ag', ele).set('split:1/2 align:e');
             expect(attr('ag', ele).has('split:3/2')).toBe(false);
-            expect(attr('ag', ele).has('align:m')).toBe(false);
+            expect(attr('ag', ele).has('align:c')).toBe(false);
             expect(attr('ag', ele).has('space:1')).toBe(false);
         });
     });
@@ -138,11 +138,11 @@ describe('attrList', function () {
             attr('ag', ele).add('space:1');
             expect($ele).toHaveAttr('ag', 'split:1/2 space:1');
             
-            attr('ag', ele).add('align:b');
-            expect($ele).toHaveAttr('ag', 'split:1/2 space:1 align:b');
+            attr('ag', ele).add('align:e');
+            expect($ele).toHaveAttr('ag', 'split:1/2 space:1 align:e');
             
-            attr('ag', ele).add('flip');
-            expect($ele).toHaveAttr('ag', 'split:1/2 space:1 align:b flip');
+            attr('ag', ele).add('reverse');
+            expect($ele).toHaveAttr('ag', 'split:1/2 space:1 align:e reverse');
         });
         
         it('should append a string to an attribute\'s value once', function () {
@@ -167,16 +167,16 @@ describe('attrList', function () {
         });
         
         it('should remove a string from an attribute\'s value', function () {
-            attr('ag', ele).set('split:3/2 align:b flip');
-            expect($ele).toHaveAttr('ag', 'split:3/2 align:b flip');
+            attr('ag', ele).set('split:3/2 align:e reverse');
+            expect($ele).toHaveAttr('ag', 'split:3/2 align:e reverse');
             
             attr('ag', ele).remove('split:3/2');
-            expect($ele).toHaveAttr('ag', 'align:b flip');
+            expect($ele).toHaveAttr('ag', 'align:e reverse');
             
-            attr('ag', ele).remove('align:b');
-            expect($ele).toHaveAttr('ag', 'flip');
+            attr('ag', ele).remove('align:e');
+            expect($ele).toHaveAttr('ag', 'reverse');
             
-            attr('ag', ele).remove('flip');
+            attr('ag', ele).remove('reverse');
             expect($ele).toHaveAttr('ag', '');
         });
     });

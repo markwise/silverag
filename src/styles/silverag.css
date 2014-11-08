@@ -179,9 +179,9 @@
 }
 
 
-/* ag::flip modifier */
+/* ag::reverse modifier */
  
-[ag~='flip'] {
+[ag~='reverse'] {
     -ms-flex-direction: row-reverse;
     -webkit-flex-direction: row-reverse;
     flex-direction: row-reverse;
