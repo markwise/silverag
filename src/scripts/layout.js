@@ -34,7 +34,7 @@ var layout = (function () {
     //
     // @private
     //
-    // Returns a filtered array of ag-cel elements without the show modifier
+    // Returns a filtered array of ag-item elements without the show modifier
     //
     // @param {HTMLElement} ele
     //      An ag element
@@ -42,16 +42,16 @@ var layout = (function () {
     // @returns {Array}
     //
     
-    var getVisibleAgCels = function (ele) {
+    var getVisibleAgItems = function (ele) {
         var node = ele.firstElementChild,
             a = [];
             
         while (node) {
-            if (!attr('ag-cel', node).has('show')) {
+            if (!attr('ag-item', node).has('show')) {
                 a.push(node);
             }
         
-            attr('class', node).add('ag-cel');
+            attr('class', node).add('ag-item');
             node = node.nextElementSibling;
         }
     
@@ -63,8 +63,8 @@ var layout = (function () {
     // @private
     //
     // Creates an ag-line element between visible elements. Visible elements
-    // are any ag-cel elements that don't have a show modifier, which is
-    // used to hide ag-cel elements in non-responsive layouts. 
+    // are any ag-item elements that don't have a show modifier, which is
+    // used to hide ag-item elements in non-responsive layouts. 
     //
     // Each ag-line element is assigned an ordinal value in relation to 
     // other ag-line elements. This ordinal value is used as an internal styling
@@ -78,7 +78,7 @@ var layout = (function () {
     //
     
     var createAgLines = function (ele) {
-        var nodes = getVisibleAgCels(ele),
+        var nodes = getVisibleAgItems(ele),
             l = nodes.length,
             i = 1,
             agLine;

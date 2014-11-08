@@ -7,11 +7,11 @@ describe('layout', function () {
         setFixtures([
             //jshint ignore:start
             '<div ag="split:3">',
-                '<div ag-cel></div>',
-                '<div ag-cel="show"></div>',
-                '<div ag-cel></div>',
-                '<div ag-cel="show"></div>',
-                '<div ag-cel></div>',
+                '<div ag-item></div>',
+                '<div ag-item="show"></div>',
+                '<div ag-item></div>',
+                '<div ag-item="show"></div>',
+                '<div ag-item></div>',
             '</div>'
             //jshint ignore:end
         ].join(''));
@@ -26,14 +26,14 @@ describe('layout', function () {
 
     it('should initialize a layout', function () {
         var store,
-            agCel = $ele.children('[ag-cel]')[0],
+            agItem = $ele.children('[ag-item]')[0],
             agLines;
         
         expect($ele).not.toHaveProp('agid');
         expect(keyStore.get(ele.agid)).not.toEqual(jasmine.any(Object));
         expect($ele.children('[ag-line]').length).toBe(0);
         expect($ele).not.toHaveClass('ag');
-        expect(agCel).not.toHaveClass('ag-cel');
+        expect(agItem).not.toHaveClass('ag-item');
         
         layout.initialize(ele);
         expect($ele).toHaveProp('agid');
@@ -43,7 +43,7 @@ describe('layout', function () {
         agLines = $ele.children('[ag-line]');
         expect(agLines.length).toBe(2);
         expect($ele).toHaveClass('ag');
-        expect(agCel).toHaveClass('ag-cel');
+        expect(agItem).toHaveClass('ag-item');
         expect(agLines[0]).toHaveClass('ag-line');
     });
     
