@@ -50,8 +50,8 @@ var layout = (function () {
             if (!attr('ag-cel', node).has('show')) {
                 a.push(node);
             }
-    	
-    		attr('class', node).add('ag-cel');
+        
+            attr('class', node).add('ag-cel');
             node = node.nextElementSibling;
         }
     
