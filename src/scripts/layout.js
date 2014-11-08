@@ -188,7 +188,7 @@ var layout = (function () {
     //    max-width value of ag-res is used to match a media query defined 
     //    using the matchMedia API to initialize a layout accordingly
     //
-    // 5. The layout is made visible by adding the class ag-ready
+    // 5. The layout is made visible by adding the class ag
     //
     // @param {HTMLElement} ele
     //      An ag element
@@ -212,7 +212,7 @@ var layout = (function () {
             respond(ele, agRes);
         }
         
-        attr('class', ele).add('ag-ready');
+        attr('class', ele).add('ag');
     };
 
 

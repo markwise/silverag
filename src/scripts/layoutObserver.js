@@ -21,12 +21,12 @@ var layoutObserver = (function () {
     var removedNodesMutation = function (ele) {
         
         //Is ele a layout
-        if (attr('class', ele).has('ag-ready')) {
+        if (attr('class', ele).has('ag')) {
             keyStore.remove(ele.agid);
         }
         
         //Are any of ele's descendants a layout
-        var eles = ele.querySelectorAll('.ag-ready'),
+        var eles = ele.querySelectorAll('.ag'),
             i = eles.length;
         
         while (i--) {
@@ -56,7 +56,7 @@ var layoutObserver = (function () {
         }
         
         //Try to initialize new layouts that have been added to the DOM
-        layouts.initialize(getLayouts('[ag]:not(.ag-ready)'));
+        layouts.initialize(getLayouts('[ag]:not(.ag)'));
     };
     
     

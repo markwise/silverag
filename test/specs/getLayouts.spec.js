@@ -5,9 +5,9 @@ describe('getLayouts', function () {
     beforeEach(function () {
         setFixtures([
             '<div ag></div>',
-            '<div ag class="ag-ready"></div>',
+            '<div ag class="ag"></div>',
             '<div ag></div>',
-            '<div ag class="ag-ready"></div>',
+            '<div ag class="ag"></div>',
             '<div ag></div>'
         ].join(''));
     });
@@ -18,6 +18,6 @@ describe('getLayouts', function () {
     });
     
     it('should accept a selector argument to filter layouts', function () {
-        expect(getLayouts('.ag-ready').length).toBe(2);
+        expect(getLayouts('.ag').length).toBe(2);
     });
 });

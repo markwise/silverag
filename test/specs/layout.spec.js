@@ -30,7 +30,7 @@ describe('layout', function () {
         expect($ele).not.toHaveProp('agid');
         expect(keyStore.get(ele.agid)).not.toEqual(jasmine.any(Object));
         expect($ele.children('[ag-line]').length).toBe(0);
-        expect($ele).not.toHaveClass('ag-ready');
+        expect($ele).not.toHaveClass('ag');
         
         layout.initialize(ele);
         expect($ele).toHaveProp('agid');
@@ -38,7 +38,7 @@ describe('layout', function () {
         expect(store).toEqual(jasmine.any(Object));
         expect(store.modifiers).toBe('split:3');
         expect($ele.children('[ag-line]').length).toBe(2);
-        expect($ele).toHaveClass('ag-ready');
+        expect($ele).toHaveClass('ag');
     });
     
     it('should remove modifiers', function () {
