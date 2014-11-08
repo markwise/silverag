@@ -52,13 +52,11 @@ describe('layout', function () {
     
         layout.initialize(ele);
         store = keyStore.get(ele.agid);
-        expect(store.responding).toBeUndefined();
         expect($ele).not.toHaveClass('ag-responding');
-        expect($ele).not.toHaveClass('ag-not-responding');
+        expect($ele).toHaveClass('ag-not-responding');
         expect($ele).toHaveAttr('ag');
         
         layout.removeModifiers(ele);
-        expect(store.responding).toBe(true);
         expect($ele).toHaveClass('ag-responding');
         expect($ele).not.toHaveClass('ag-not-responding');
         expect($ele).not.toHaveAttr('ag');
@@ -70,13 +68,11 @@ describe('layout', function () {
         layout.initialize(ele);
         store = keyStore.get(ele.agid);
         layout.removeModifiers(ele);
-        expect(store.responding).toBe(true);
         expect($ele).toHaveClass('ag-responding');
         expect($ele).not.toHaveClass('ag-not-responding');
         expect($ele).not.toHaveAttr('ag');
         
         layout.applyModifiers(ele);
-        expect(store.responding).toBe(false);
         expect($ele).toHaveClass('ag-not-responding');
         expect($ele).not.toHaveClass('ag-responding');
         expect($ele).toHaveAttr('ag', store.modifiers);

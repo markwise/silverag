@@ -10,19 +10,17 @@ var layout = (function () {
     //
     // @private
     //
-    // Respond gets called one-time during layout initialization if a max-width
-    // value is defined with the ag-respond label.
+    // Respond gets called one-time during initialization to check if a layout 
+    // should be responding or not.
     //
     // @param {HTMLElement} ele
     //      An ag element
     //
-    // @param {String} maxWidth
-    //      The max-width value used to match against
-    //
 
-    var respond = function (ele, maxWidth) {
-        var media = 'screen and (max-width:' + maxWidth + 'px)';
-
+    var respond = function (ele) {
+        var maxWidth = attr('ag-respond', ele).get(),
+            media = 'screen and (max-width:' + maxWidth + 'px)';
+    
         if (matchMedia(media).matches) {
             removeModifiers(ele);
         } else {
@@ -34,7 +32,7 @@ var layout = (function () {
     //
     // @private
     //
-    // Returns a filtered array of ag-item elements without the show modifier
+    // Returns a filtered array of ag-item elements that don't have a show modifier.
     //
     // @param {HTMLElement} ele
     //      An ag element
@@ -71,7 +69,7 @@ var layout = (function () {
     // hook to show and hide ag-line elements.
     //
     // Each ag-line element is also assigned the class ag-line that can be used
-    // as an author styling hook
+    // as an author styling hook.
     //
     // @param {HTMLElement} ele
     //      An ag element
@@ -93,33 +91,6 @@ var layout = (function () {
     
     
     //
-    // @private
-    //
-    // Removes non-element nodes from a layout. Although not required, it
-    // provides a clean base to work from by eliminating comments and extraneous
-    // whitespace nodes.
-    //
-    // @param {HTMLElement} ele
-    //      An ag element
-    //
-
-    var removeNonElements = function (ele) {
-        var node = ele.firstChild,
-            next;
-
-        while (node) {
-            next = node.nextSibling;
-
-            if (node.nodeType !== 1) {
-                ele.removeChild(node);
-            }
-
-            node = next;
-        }
-    };
-
-
-    //
     // @public
     //
     // Restores the ag label and it's modifiers to a layout.
@@ -128,17 +99,13 @@ var layout = (function () {
     // for authors. Likewise, if a layout is responding, the class ag-responding 
     // is added to the layout.
     //
-    // The methods applyModifiers and removeModifiers only apply to responsive
-    // layouts defined with an ag-respond label.
-    //
     // @param {HTMLElement} ele
     //      An ag element
     //
 
     var applyModifiers = function (ele) {
         var store = keyStore.get(ele.agid);
-
-        store.responding = false;
+        
         attr('class', ele).remove('ag-responding');
         attr('class', ele).add('ag-not-responding');
         attr('ag', ele).set(store.modifiers);
@@ -150,23 +117,17 @@ var layout = (function () {
     //
     // Removes the ag label and it's modifiers from a layout. Because all styles
     // are tied to the attribute ag, removing it provides a clean style 
-    // definition to work from when a layout is responding :)
+    // definition to work from when a layout is responding.
     //
     // The class ag-responding is added to the layout providing a styling hook 
     // for authors. Likewise, if a layout is not responding, the class 
     // ag-not-responding is added to the layout.
-    //
-    // The methods applyModifiers and removeModifiers only apply to responsive
-    // layouts defined with an ag-respond label.
     //
     // @param {HTMLElement} ele
     //      An ag element
     //
 
     var removeModifiers = function (ele) {
-        var store = keyStore.get(ele.agid);
-
-        store.responding = true;
         attr('class', ele).remove('ag-not-responding');
         attr('class', ele).add('ag-responding');
         attr('ag', ele).remove();
@@ -176,24 +137,19 @@ var layout = (function () {
     //
     // @public
     //
-    // The core layout initialization method
+    // The core layout initialization method does the following:
     //
-    // What does it mean for a layout to be initialized?
-    //
-    // 1. A UUID is created for a layout, which is used to create a 
+    // 1. A UUID is created for a layout and is used to create a 
     //    key/value store
     //
-    // 2. All non-element nodes are removed from a layout to provide a clean
-    //    base to work from
-    //
-    // 3. ag-line elements are injected into a layout, which are used to show
+    // 2. ag-line elements are injected into a layout, which are used to show
     //    and hide dividing lines between columns
     //
-    // 4. If a layout is responsive, meaning it has an ag-respond label, the
+    // 3. If a layout is responsive, meaning it has an ag-respond label, the
     //    max-width value of ag-respond is used to match a media query defined 
     //    using the matchMedia API to initialize a layout accordingly
     //
-    // 5. The layout is made visible by adding the class ag
+    // 4. The layout is made visible by adding the class ag
     //
     // @param {HTMLElement} ele
     //      An ag element
@@ -206,17 +162,11 @@ var layout = (function () {
             return;
         }
         
-        var store = keyStore.create(generateAgId(ele)),
-            agRes = attr('ag-respond', ele).get();
+        var store = keyStore.create(generateAgId(ele));
          
         store.modifiers = attr('ag', ele).get();
-        removeNonElements(ele);
         createAgLines(ele);
-        
-        if (agRes) {
-            respond(ele, agRes);
-        }
-        
+        respond(ele);
         attr('class', ele).add('ag');
     };
 
