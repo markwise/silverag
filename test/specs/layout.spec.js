@@ -25,20 +25,26 @@ describe('layout', function () {
     });
 
     it('should initialize a layout', function () {
-        var store;
+        var store,
+            agCel = $ele.children('[ag-cel]')[0],
+            agLines;
         
         expect($ele).not.toHaveProp('agid');
         expect(keyStore.get(ele.agid)).not.toEqual(jasmine.any(Object));
         expect($ele.children('[ag-line]').length).toBe(0);
         expect($ele).not.toHaveClass('ag');
+        expect(agCel).not.toHaveClass('ag-cel');
         
         layout.initialize(ele);
         expect($ele).toHaveProp('agid');
         store = keyStore.get(ele.agid);
         expect(store).toEqual(jasmine.any(Object));
         expect(store.modifiers).toBe('split:3');
-        expect($ele.children('[ag-line]').length).toBe(2);
+        agLines = $ele.children('[ag-line]');
+        expect(agLines.length).toBe(2);
         expect($ele).toHaveClass('ag');
+        expect(agCel).toHaveClass('ag-cel');
+        expect(agLines[0]).toHaveClass('ag-line');
     });
     
     it('should remove modifiers', function () {

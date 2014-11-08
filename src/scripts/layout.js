@@ -42,7 +42,7 @@ var layout = (function () {
     // @returns {Array}
     //
     
-    var getVisibleElements = function (ele) {
+    var getVisibleAgCels = function (ele) {
         var node = ele.firstElementChild,
             a = [];
             
@@ -50,7 +50,8 @@ var layout = (function () {
             if (!attr('ag-cel', node).has('show')) {
                 a.push(node);
             }
-    
+    	
+    		attr('class', node).add('ag-cel');
             node = node.nextElementSibling;
         }
     
@@ -69,12 +70,15 @@ var layout = (function () {
     // other ag-line elements. This ordinal value is used as an internal styling
     // hook to show and hide ag-line elements.
     //
+    // Each ag-line element is also assigned the class ag-line that can be used
+    // as an author styling hook
+    //
     // @param {HTMLElement} ele
     //      An ag element
     //
     
     var createAgLines = function (ele) {
-        var nodes = getVisibleElements(ele),
+        var nodes = getVisibleAgCels(ele),
             l = nodes.length,
             i = 1,
             agLine;
@@ -82,6 +86,7 @@ var layout = (function () {
         for (; i < l; i++) {
             agLine = doc.createElement('div');
             attr('ag-line', agLine).set(i);
+            attr('class', agLine).add('ag-line');
             ele.insertBefore(agLine, nodes[i]);
         }
     };
