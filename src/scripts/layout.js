@@ -11,7 +11,7 @@ var layout = (function () {
     // @private
     //
     // Respond gets called one-time during layout initialization if a max-width
-    // value is defined with the ag-res label.
+    // value is defined with the ag-respond label.
     //
     // @param {HTMLElement} ele
     //      An ag element
@@ -129,7 +129,7 @@ var layout = (function () {
     // is added to the layout.
     //
     // The methods applyModifiers and removeModifiers only apply to responsive
-    // layouts defined with an ag-res label.
+    // layouts defined with an ag-respond label.
     //
     // @param {HTMLElement} ele
     //      An ag element
@@ -157,7 +157,7 @@ var layout = (function () {
     // ag-not-responding is added to the layout.
     //
     // The methods applyModifiers and removeModifiers only apply to responsive
-    // layouts defined with an ag-res label.
+    // layouts defined with an ag-respond label.
     //
     // @param {HTMLElement} ele
     //      An ag element
@@ -189,8 +189,8 @@ var layout = (function () {
     // 3. ag-line elements are injected into a layout, which are used to show
     //    and hide dividing lines between columns
     //
-    // 4. If a layout is responsive, meaning it has an ag-res label, the
-    //    max-width value of ag-res is used to match a media query defined 
+    // 4. If a layout is responsive, meaning it has an ag-respond label, the
+    //    max-width value of ag-respond is used to match a media query defined 
     //    using the matchMedia API to initialize a layout accordingly
     //
     // 5. The layout is made visible by adding the class ag
@@ -207,7 +207,7 @@ var layout = (function () {
         }
         
         var store = keyStore.create(generateAgId(ele)),
-            agRes = attr('ag-res', ele).get();
+            agRes = attr('ag-respond', ele).get();
          
         store.modifiers = attr('ag', ele).get();
         removeNonElements(ele);

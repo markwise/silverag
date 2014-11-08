@@ -23,7 +23,7 @@ var mediaQueries = (function () {
     
     var maxWidthChange = function (mql) {
         var maxWidth = mql.media.match(/(\d+)/)[1],
-            eles = getLayouts('[ag-res="' + maxWidth + '"]');
+            eles = getLayouts('[ag-respond="' + maxWidth + '"]');
     
         if (eles.length) {
             if (mql.matches) {
