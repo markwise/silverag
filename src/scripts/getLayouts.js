@@ -1,10 +1,5 @@
 /* global doc */
 
-
-
-
-
-
 //
 // @public
 //
