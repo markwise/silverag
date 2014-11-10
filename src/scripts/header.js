@@ -7,4 +7,3 @@ var silverag = (function () {
     var doc  = document;
     var html = doc.documentElement;
     var head = doc.head;
-    

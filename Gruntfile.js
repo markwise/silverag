@@ -1,35 +1,55 @@
 module.exports = function (grunt) {
-    var _ = require('lodash');
-    
     grunt.initConfig({
     
         pkg: grunt.file.readJSON('package.json'),
         
-        id: '<%= pkg.name %>-<%= pkg.version %>',
+        names: {
+            dist: '<%= pkg.name %>-<%= pkg.version %>',
+            edge: '<%= pkg.name %>-edge'
+        },
         
         banners: {
-            build: '/* <%= grunt.template.today("dddd, mmmm dS, yyyy, h:MM:ss TT") %> */',
             dist: [
                 '/*\n',
+                ' * Build Date: <%= grunt.template.today("dddd, mmmm dS, yyyy, h:MM:ss TT") %>\n',
+                ' *\n',
                 ' * Silver Ag v<%= pkg.version %>\n',
                 ' * https://github.com/markwise/silverag\n',
                 ' *\n',
                 ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author %>, contributers\n',
                 ' * Released under the terms of the MIT license\n',
-                ' */\n'
+                ' */'
             ].join('')
         },
         
         concat: {
             scripts: {
                 options: {
+                    banner: '<%= banners.dist %>\n\n',
                     separator: '\n\n\n',
-                    stripBanners: true,
-                    process: function (src) {
-                        return src.replace(/\s*(['"])use strict\1;\s*/g, '\n    ');
+                    process: function (src, path) {
+                        
+                        if (/header/.test(path)) {
+                            src = src.replace(/@version/, grunt.config.data.pkg.version);
+                        }
+                        
+                        if (!/header|footer/.test(path)) {
+                            
+                            //Remove jshint globals
+                            src = src.replace(/^\/\* global.*\*\/\s*/, '');
+                            
+                            //Remove use strict statements
+                            src = src.replace(/(['"])use strict\1;\s*/, '');
+                            
+                            //Indent each line by 4 spaces
+                            src = src.replace(/^(.*)$/mg, '    $1');
+                        }
+                        
+                        return src;                      
                     }
                 },
                 src: [
+                    'src/scripts/header.js',
                     'src/scripts/attrList.js',
                     'src/scripts/generateAgId.js',
                     'src/scripts/keyStore.js',
@@ -38,82 +58,79 @@ module.exports = function (grunt) {
                     'src/scripts/layouts.js',
                     'src/scripts/layoutObserver.js',
                     'src/scripts/mediaQueries.js',
-                    'src/scripts/initialize.js'
-                ],
-                dest: '.tmp/concat.js'
-            },
-            module: {
-                options: {
-                    banner: '<%= banners.build %>\n\n',
-                    separator: '\n\n\n',
-                    stripBanners: true,
-                    process: function (src) {
-                        return src.replace(/@version/, grunt.config.data.pkg.version);
-                    }
-                },
-                src: [
-                    'src/scripts/header.js',
-                    '<%= concat.scripts.dest %>',
+                    'src/scripts/initialize.js',
                     'src/scripts/footer.js'
                 ],
                 dest: 'build/<%= pkg.name %>.js'
             },
             styles: {
                 options: {
-                    banner: '@charset \'utf-8\';\n\n<%= banners.build %>\n\n'
+                    banner: '@charset \'utf-8\';\n\n<%= banners.dist %>\n\n'
                 },
-                src: ['src/styles/silverag.css'],
+                src: 'src/styles/silverag.css',
                 dest: 'build/<%= pkg.name %>.css'
-            }
-        },
-    
-        indent: {
-            scripts: {
-                options: {
-                    style: 'space',
-                    size: 4,
-                    change: 1
-                },
-                src: ['<%= concat.scripts.dest %>'],
-                dest: '.tmp/'
             }
         },
         
         clean: {
-            tmp: ['.tmp/'],
             scripts: ['build/*.js'],
             styles: ['build/*.css'],
             dist: ['dist/'],
             coverage: ['reports/coverage/']
         },
     
-        uglify: {
+        copy: {
             dist: {
-                options: {
-                    banner: '<%= banners.dist %>\n'
-                },
-                src: 'build/<%= pkg.name %>.js',
-                dest: '.tmp/<%= id %>/<%= id %>.min.js'
+                files: [
+                    {
+                        src: '<%= concat.scripts.dest %>',
+                        dest: 'dist/<%= names.dist %>.js'
+                    },
+                    {
+                        src: '<%= concat.styles.dest %>',
+                        dest: 'dist/<%= names.dist %>.css'    
+                    }
+                ]
+            },
+            edge: {
+                files: [
+                    {
+                        src: '<%= concat.scripts.dest %>',
+                        dest: 'dist/<%= names.edge %>.js'
+                    },
+                    {
+                        src: '<%= concat.styles.dest %>',
+                        dest: 'dist/<%= names.edge %>.css'    
+                    }
+                ]
             }
         },
     
-        zip: {
+        uglify: {
+            options: {
+                banner: '<%= banners.dist %>\n\n'
+            },
             dist: {
-                cwd: '.tmp/',
-                src: ['.tmp/<%= id %>/*'],
-                dest: 'dist/<%= id %>.zip'
+                src: 'dist/<%= names.dist %>.js',
+                dest: 'dist/<%= names.dist %>.min.js'
+            },
+            edge: {
+                src: 'dist/<%= names.edge %>.js',
+                dest: 'dist/<%= names.edge %>.min.js'
             }
         },
         
         cssmin: {
+            options: {
+                banner: '@charset "utf-8";\n\n<%= banners.dist %>\n'
+            },
             dist: {
-                options: {
-                    banner: '@charset "utf-8";\n\n<%= banners.dist %>'
-                },
-                files: [{
-                    src: ['build/<%= pkg.name %>.css'],
-                    dest: '.tmp/<%= id %>/<%= pkg.name %>-<%= pkg.version %>.min.css'
-                }]
+                src: 'dist/<%= names.dist %>.css',
+                dest: 'dist/<%= names.dist %>.min.css'
+            },
+            edge: {
+                src: 'dist/<%= names.edge %>.css',
+                dest: 'dist/<%= names.edge %>.min.css'
             }
         },
         
@@ -201,35 +218,22 @@ module.exports = function (grunt) {
     
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-indent');
     grunt.loadNpmTasks('grunt-karma');
-    grunt.loadNpmTasks('grunt-zip');
     
     
     //Custom tasks
     
     grunt.registerTask('build:scripts', [
         
-        //Make sure tmp directory is empty
-        'clean:tmp',
-        
-        //Concatenate scripts and move to tmp directory
-        'concat:scripts',
-        
-        //Indent concatenated scripts so they are indented within the main module
-        'indent',
-        
         //Remove existing build scripts
         'clean:scripts',
         
-        //Concatenate main module and scripts, and move to build directory
-        'concat:module',
-        
-        //Remove tmp files
-        'clean:tmp'
+        //Concatenate scripts and move to build directory
+        'concat:scripts'
     ]);
     
     grunt.registerTask('build:styles', [
@@ -258,7 +262,7 @@ module.exports = function (grunt) {
         'karma:unit'
     ]);
     
-    grunt.registerTask('release', [
+    grunt.registerTask('dist', [
         
         //Run tests
         'test',
@@ -266,23 +270,38 @@ module.exports = function (grunt) {
         //Make a clean build
         'build',
         
-        //Make sure tmp directory is empty
-        'clean:tmp',
+        //Remove existing release files
+        'clean:dist',
         
-        //Minify build scripts and move to tmp directory
-        'uglify',
+        //Copy, rename and move build files to dist directory
+        'copy:dist',
         
-        //Minify build styles and move to tmp directory
-        'cssmin',
+        //Minify dist scripts
+        'uglify:dist',
+        
+        //Minify dist styles
+        'cssmin:dist'
+    ]);
+    
+    grunt.registerTask('edge', [
+        
+        //Run tests
+        'test',
+        
+        //Make a clean build
+        'build',
         
         //Remove existing release files
         'clean:dist',
         
-        //Zip tmp files and move to release directory
-        'zip',
+        //Copy, rename and move build files to dist directory
+        'copy:edge',
         
-        //Remove tmp files
-        'clean:tmp'
+        //Minify dist scripts
+        'uglify:edge',
+        
+        //Minify dist styles
+        'cssmin:edge'
     ]);
     
     grunt.registerTask('default', function () {
@@ -301,9 +320,11 @@ module.exports = function (grunt) {
             'grunt test\n',
             '    run jshint and jasmine tests\n\n',
             
-            'grunt release\n',
-            '    run tests, build and minify scripts and styles, zip distribution\n',
-            '    files and move to dist directory\n\n'
+            'grunt dist\n',
+            '    create distribution release\n\n',
+            
+            'grunt edge\n',
+            '    create edge release'
         ].join(''));
     });
 };

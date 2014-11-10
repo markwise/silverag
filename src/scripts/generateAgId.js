@@ -24,4 +24,3 @@ var generateAgId = (function () {
         return ele.agid = new Date().getTime() + (index += 1);
     };
 }());
-    
